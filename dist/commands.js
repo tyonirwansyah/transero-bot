@@ -18,15 +18,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -88,7 +79,7 @@ function initializeQuiz(param, client) {
     let notAnswered = true;
     let quizMsgId;
     //
-    if (param.command === "trquiz" && !holdingQuizCommand) {
+    if (param.command === "trquiz") {
         const pickQuiz = new Discord.MessageEmbed()
             .setColor(randomcolor_1.default().substring(1))
             .setAuthor("Transero the Quiz Whizz", avatar)
@@ -113,7 +104,7 @@ function initializeQuiz(param, client) {
             message.react("👨‍🦯");
             quizMsgId = message.id;
         });
-        client.on("messageReactionAdd", (reaction, user) => __awaiter(this, void 0, void 0, function* () {
+        const listener = (reaction, user) => {
             if (user.bot)
                 return;
             const emojiName = reaction.emoji.name;
@@ -125,26 +116,27 @@ function initializeQuiz(param, client) {
                             quizL.countryFlagQuiz({ msg: param.msg, client: client });
                             notAnswered = false;
                             holdingQuizCommand = true;
-                            // countryFlagQuiz()
+                            param.msg.client.removeListener("messageReactionAdd", listener);
                             break;
                         case "🗽":
                             param.msg.channel.send(pickQuizEmbed("Picked Capital City Quiz."));
                             quizL.capitalCityQuiz({ msg: param.msg, client: client });
                             notAnswered = false;
                             holdingQuizCommand = true;
-                            // capitalCityQuiz()
+                            param.msg.client.removeListener("messageReactionAdd", listener);
                             break;
                         case "👨‍🦯":
                             param.msg.channel.send(pickQuizEmbed("Picked Country Quiz."));
                             quizL.countryCapitalQuiz({ msg: param.msg, client: client });
                             notAnswered = false;
                             holdingQuizCommand = true;
-                            // countryQuiz()
+                            param.msg.client.removeListener("messageReactionAdd", listener);
                             break;
                     }
                 }
             }
-        }));
+        };
+        param.msg.client.on("messageReactionAdd", listener);
     }
     else if (param.command === "trquiz" && holdingQuizCommand) {
         return param.msg.channel.send(pickQuizEmbed("Game currently running."));

@@ -27,210 +27,106 @@ const Discord = __importStar(require("discord.js"));
 const country = __importStar(require("country-quiz"));
 const randomcolor_1 = __importDefault(require("randomcolor"));
 const iso_3166_1_1 = __importDefault(require("iso-3166-1"));
-const commands_1 = require("../commands");
 // Message Embed Variables
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
 // Quiz Selections
-let FlagtoCountry = country.newQuiz("flag-to-country");
-let CountrytoCity = country.newQuiz("country-to-capital");
-let CitytoCountry = country.newQuiz("capital-to-country");
-let messageId;
+let FlagtoCountry = country.newQuiz("flag-to-country", 1);
+let CountrytoCity = country.newQuiz("country-to-capital", 1);
+let CitytoCountry = country.newQuiz("capital-to-country", 1);
 // Is Playing?
 let isPlaying = true;
-let qCount = 0;
-let scoreAnswer = 0;
-// Exported Functions //
 // Flag to Country
 function countryFlagQuiz(p) {
     let notAnswered = true;
-    if (qCount === FlagtoCountry.questions.length) {
-        isPlaying = false;
-        resultEmbed(scoreAnswer, FlagtoCountry.questions.length, p.msg);
-        p.client.removeAllListeners("messageReactionAdd"); // prevent mem. leaks
-        commands_1.disableHoldingCommand(false);
-        return ((FlagtoCountry = country.newQuiz("flag-to-country")),
-            (isPlaying = true),
-            (qCount = 0),
-            (scoreAnswer = 0));
-    }
-    if (isPlaying) {
-        quizQuestionEmbed({
-            quiz: FlagtoCountry,
-            quizQ: FlagtoCountry.questions[qCount],
-            typeQuiz: 0,
-            msg: p.msg,
-            imgUrl: FlagtoCountry.questions[qCount].question,
-        });
-        p.client.on("messageReactionAdd", (reaction, user) => {
-            if (user.bot)
-                return;
-            const emojiName = reaction.emoji.name;
-            if (reaction.message.id === messageId) {
-                if (notAnswered) {
-                    let yourAnswer;
-                    const answerKey = FlagtoCountry.questions[qCount];
-                    switch (emojiName) {
-                        case "1️⃣":
-                            notAnswered = false;
-                            yourAnswer = 0;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            countryFlagQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "2️⃣":
-                            notAnswered = false;
-                            yourAnswer = 1;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            countryFlagQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "3️⃣":
-                            notAnswered = false;
-                            yourAnswer = 2;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            countryFlagQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "4️⃣":
-                            notAnswered = false;
-                            yourAnswer = 3;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            countryFlagQuiz({ msg: p.msg, client: p.client });
-                            break;
-                    }
-                }
-            }
-        });
-    }
+    FlagtoCountry = country.newQuiz("flag-to-country");
+    const quiz = FlagtoCountry;
+    quizQuestionEmbed({
+        quiz: quiz,
+        quizQ: quiz.questions[0],
+        typeQuiz: 0,
+        msg: p.msg,
+        imgUrl: quiz.questions[0].question,
+    });
+    const listener = (reaction, user) => {
+        if (user.bot)
+            return;
+        const emojiName = reaction.emoji.name;
+        const fetchMessage = p.msg.channel.lastMessage.id;
+        if (reaction.message.id === fetchMessage && notAnswered) {
+            const answerKey = quiz.questions[0];
+            checkAnswers({
+                msg: p.msg,
+                client: p.client,
+                answerKey: answerKey,
+                emoji: emojiName,
+                listener: listener,
+            });
+            notAnswered = false;
+        }
+    };
+    p.client.on("messageReactionAdd", listener);
 }
 exports.countryFlagQuiz = countryFlagQuiz;
 // Country to City
 function capitalCityQuiz(p) {
     let notAnswered = true;
-    if (qCount === CountrytoCity.questions.length) {
-        isPlaying = false;
-        resultEmbed(scoreAnswer, CountrytoCity.questions.length, p.msg);
-        p.client.removeAllListeners("messageReactionAdd"); // prevent mem. leaks
-        commands_1.disableHoldingCommand(false);
-        return ((CountrytoCity = country.newQuiz("country-to-capital")),
-            (isPlaying = true),
-            (qCount = 0),
-            (scoreAnswer = 0));
-    }
-    if (isPlaying) {
-        quizQuestionEmbed({
-            quiz: CountrytoCity,
-            quizQ: CountrytoCity.questions[qCount],
-            typeQuiz: 1,
-            msg: p.msg,
-        });
-        p.client.on("messageReactionAdd", (reaction, user) => {
-            if (user.bot)
-                return;
-            const emojiName = reaction.emoji.name;
-            if (reaction.message.id === messageId) {
-                if (notAnswered) {
-                    let yourAnswer;
-                    const answerKey = CountrytoCity.questions[qCount];
-                    switch (emojiName) {
-                        case "1️⃣":
-                            notAnswered = false;
-                            yourAnswer = 0;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            capitalCityQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "2️⃣":
-                            notAnswered = false;
-                            yourAnswer = 1;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            capitalCityQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "3️⃣":
-                            notAnswered = false;
-                            yourAnswer = 2;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            capitalCityQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "4️⃣":
-                            notAnswered = false;
-                            yourAnswer = 3;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            capitalCityQuiz({ msg: p.msg, client: p.client });
-                            break;
-                    }
-                }
-            }
-        });
-    }
+    CountrytoCity = country.newQuiz("country-to-capital");
+    const quiz = CountrytoCity;
+    quizQuestionEmbed({
+        quiz: quiz,
+        quizQ: quiz.questions[0],
+        typeQuiz: 1,
+        msg: p.msg,
+    });
+    const listener = (reaction, user) => {
+        if (user.bot)
+            return;
+        const emojiName = reaction.emoji.name;
+        const fetchMessage = p.msg.channel.lastMessage.id;
+        if (reaction.message.id === fetchMessage && notAnswered) {
+            const answerKey = quiz.questions[0];
+            checkAnswers({
+                msg: p.msg,
+                client: p.client,
+                answerKey: answerKey,
+                emoji: emojiName,
+                listener: listener,
+            });
+            notAnswered = false;
+        }
+    };
+    p.client.on("messageReactionAdd", listener);
 }
 exports.capitalCityQuiz = capitalCityQuiz;
 // City to Country
 function countryCapitalQuiz(p) {
     let notAnswered = true;
-    if (qCount === CitytoCountry.questions.length) {
-        isPlaying = false;
-        resultEmbed(scoreAnswer, CitytoCountry.questions.length, p.msg);
-        p.client.removeAllListeners("messageReactionAdd"); // prevent mem. leaks
-        commands_1.disableHoldingCommand(false);
-        return ((CitytoCountry = country.newQuiz("capital-to-country")),
-            (isPlaying = true),
-            (qCount = 0),
-            (scoreAnswer = 0));
-    }
-    if (isPlaying) {
-        quizQuestionEmbed({
-            quiz: CitytoCountry,
-            quizQ: CitytoCountry.questions[qCount],
-            typeQuiz: 2,
-            msg: p.msg,
-        });
-        p.client.on("messageReactionAdd", (reaction, user) => {
-            if (user.bot)
-                return;
-            const emojiName = reaction.emoji.name;
-            if (reaction.message.id === messageId) {
-                if (notAnswered) {
-                    let yourAnswer;
-                    const answerKey = CitytoCountry.questions[qCount];
-                    switch (emojiName) {
-                        case "1️⃣":
-                            notAnswered = false;
-                            yourAnswer = 0;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            countryCapitalQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "2️⃣":
-                            notAnswered = false;
-                            yourAnswer = 1;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            countryCapitalQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "3️⃣":
-                            notAnswered = false;
-                            yourAnswer = 2;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            countryCapitalQuiz({ msg: p.msg, client: p.client });
-                            break;
-                        case "4️⃣":
-                            notAnswered = false;
-                            yourAnswer = 3;
-                            p.msg.channel.send(verifyAnswer(answerKey.answer, answerKey.options[yourAnswer]));
-                            qCount++;
-                            countryCapitalQuiz({ msg: p.msg, client: p.client });
-                            break;
-                    }
-                }
-            }
-        });
-    }
+    CitytoCountry = country.newQuiz("capital-to-country");
+    const quiz = CitytoCountry;
+    quizQuestionEmbed({
+        quiz: quiz,
+        quizQ: quiz.questions[0],
+        typeQuiz: 2,
+        msg: p.msg,
+    });
+    const listener = (reaction, user) => {
+        if (user.bot)
+            return;
+        const emojiName = reaction.emoji.name;
+        const fetchMessage = p.msg.channel.lastMessage.id;
+        if (reaction.message.id === fetchMessage && notAnswered) {
+            const answerKey = quiz.questions[0];
+            checkAnswers({
+                msg: p.msg,
+                client: p.client,
+                answerKey: answerKey,
+                emoji: emojiName,
+                listener: listener,
+            });
+            notAnswered = false;
+        }
+    };
+    p.client.on("messageReactionAdd", listener);
 }
 exports.countryCapitalQuiz = countryCapitalQuiz;
 /// Local Funcssss ///
@@ -242,55 +138,52 @@ function flagToPng(url) {
     return newUrl;
 }
 // Verify Answer
-function verifyAnswer(answer, input) {
+function verifyAnswer(answer, input, msg) {
     if (answer === input) {
-        scoreAnswer += 1;
-        return answerEmbed(true);
+        return answerEmbed({
+            isRight: true,
+            msg: msg,
+        });
     }
     else if (answer != input) {
-        return answerEmbed(false, answer.toUpperCase());
+        return answerEmbed({
+            isRight: false,
+            msg: msg,
+            answer: answer.toUpperCase(),
+        });
     }
 }
-// Embedss //
-function answerEmbed(isRight, answer) {
-    if (isRight === true) {
-        return new Discord.MessageEmbed()
+function answerEmbed(p) {
+    if (p.isRight === true) {
+        const embed = new Discord.MessageEmbed()
             .setColor(randomcolor_1.default().substring(1))
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setDescription("You got the right answer.");
+        return p.msg.channel
+            .send(embed)
+            .then((message) => {
+            message.react("🚫");
+            message.react("⏭");
+        })
+            .catch((e) => {
+            console.error(e);
+        });
     }
     else {
-        return new Discord.MessageEmbed()
+        const embed = new Discord.MessageEmbed()
             .setColor(randomcolor_1.default().substring(1))
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setDescription("You got the wrong answer.")
-            .setFooter(`The answer is ${"**" + answer + "**"}`);
-    }
-}
-function resultEmbed(score, question, msg) {
-    if (score === 5) {
-        const embed = new Discord.MessageEmbed()
-            .setColor(randomcolor_1.default().substring(1))
-            .setAuthor("Transero the Quiz Whizz", avatar)
-            .addField("Results", "**Bingo**, you got everything correct ")
-            .setFooter("Type `$trquiz` if you want to play again");
-        msg.channel.send(embed);
-    }
-    else if (score < 2) {
-        const embed = new Discord.MessageEmbed()
-            .setColor(randomcolor_1.default().substring(1))
-            .setAuthor("Transero the Quiz Whizz", avatar)
-            .addField("Results", `**Oh noo**, you gotta learn ${score}/${question}`)
-            .setFooter("Type `$trquiz` if you want to try again");
-        msg.channel.send(embed);
-    }
-    else {
-        const embed = new Discord.MessageEmbed()
-            .setColor(randomcolor_1.default().substring(1))
-            .setAuthor("Transero the Quiz Whizz", avatar)
-            .addField("Results", `**Eii**, you got ${score}/${question}`)
-            .setFooter("Type `$trquiz` if you want to play again");
-        msg.channel.send(embed);
+            .setFooter(`The answer is ${"**" + p.answer + "**"}`);
+        return p.msg.channel
+            .send(embed)
+            .then((message) => {
+            message.react("🚫");
+            message.react("⏭");
+        })
+            .catch((e) => {
+            console.error(e);
+        });
     }
 }
 function quizQuestionEmbed(p) {
@@ -299,7 +192,7 @@ function quizQuestionEmbed(p) {
     let embed = new Discord.MessageEmbed()
         .setColor(randomcolor_1.default().substring(1))
         .setAuthor("Transero the Quiz Whizz", avatar)
-        .setTitle(`Question ${qCount + 1}/${p.quiz.questions.length}`);
+        .setTitle(`Question:`);
     // 0 == Flag Country Flag Quiz
     if (p.typeQuiz === 0) {
         const option = p.quizQ.options;
@@ -316,7 +209,6 @@ function quizQuestionEmbed(p) {
             message.react("2️⃣");
             message.react("3️⃣");
             message.react("4️⃣");
-            messageId = message.id;
         })
             .catch((e) => console.error(e));
     }
@@ -335,7 +227,6 @@ function quizQuestionEmbed(p) {
             message.react("2️⃣");
             message.react("3️⃣");
             message.react("4️⃣");
-            messageId = message.id;
         })
             .catch((e) => console.error(e));
     }
@@ -354,12 +245,31 @@ function quizQuestionEmbed(p) {
             message.react("2️⃣");
             message.react("3️⃣");
             message.react("4️⃣");
-            messageId = message.id;
         })
             .catch((e) => console.error(e));
     }
     else {
         return console.error("[typeQuiz] only accept number from 0-2");
+    }
+}
+function checkAnswers(p) {
+    switch (p.emoji) {
+        case "1️⃣":
+            verifyAnswer(p.answerKey.answer, p.answerKey.options[0], p.msg);
+            p.client.removeListener("messageReactionAdd", p.listener);
+            break;
+        case "2️⃣":
+            verifyAnswer(p.answerKey.answer, p.answerKey.options[1], p.msg);
+            p.client.removeListener("messageReactionAdd", p.listener);
+            break;
+        case "3️⃣":
+            verifyAnswer(p.answerKey.answer, p.answerKey.options[2], p.msg);
+            p.client.removeListener("messageReactionAdd", p.listener);
+            break;
+        case "4️⃣":
+            verifyAnswer(p.answerKey.answer, p.answerKey.options[3], p.msg);
+            p.client.removeListener("messageReactionAdd", p.listener);
+            break;
     }
 }
 //# sourceMappingURL=quiz.js.map

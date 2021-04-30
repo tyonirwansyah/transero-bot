@@ -70,7 +70,7 @@ export function initializeQuiz(param: funcParams, client: Discord.Client) {
   let notAnswered: boolean = true;
   let quizMsgId: string;
   //
-  if (param.command === "trquiz" && !holdingQuizCommand) {
+  if (param.command === "trquiz") {
     const pickQuiz = new Discord.MessageEmbed()
       .setColor(randomColor().substring(1))
       .setAuthor("Transero the Quiz Whizz", avatar)
@@ -100,7 +100,10 @@ export function initializeQuiz(param: funcParams, client: Discord.Client) {
       message.react("👨‍🦯");
       quizMsgId = message.id;
     });
-    client.on("messageReactionAdd", async (reaction, user) => {
+    const listener = (
+      reaction: Discord.MessageReaction,
+      user: Discord.User
+    ) => {
       if (user.bot) return;
       const emojiName = reaction.emoji.name;
       if (reaction.message.id === quizMsgId) {
@@ -113,7 +116,7 @@ export function initializeQuiz(param: funcParams, client: Discord.Client) {
               quizL.countryFlagQuiz({ msg: param.msg, client: client });
               notAnswered = false;
               holdingQuizCommand = true;
-              // countryFlagQuiz()
+              param.msg.client.removeListener("messageReactionAdd", listener);
               break;
             case "🗽":
               param.msg.channel.send(
@@ -122,19 +125,20 @@ export function initializeQuiz(param: funcParams, client: Discord.Client) {
               quizL.capitalCityQuiz({ msg: param.msg, client: client });
               notAnswered = false;
               holdingQuizCommand = true;
-              // capitalCityQuiz()
+              param.msg.client.removeListener("messageReactionAdd", listener);
               break;
             case "👨‍🦯":
               param.msg.channel.send(pickQuizEmbed("Picked Country Quiz."));
               quizL.countryCapitalQuiz({ msg: param.msg, client: client });
               notAnswered = false;
               holdingQuizCommand = true;
-              // countryQuiz()
+              param.msg.client.removeListener("messageReactionAdd", listener);
               break;
           }
         }
       }
-    });
+    };
+    param.msg.client.on("messageReactionAdd", listener);
   } else if (param.command === "trquiz" && holdingQuizCommand) {
     return param.msg.channel.send(pickQuizEmbed("Game currently running."));
   }
