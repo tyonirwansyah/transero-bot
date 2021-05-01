@@ -1,6 +1,5 @@
 import * as Discord from "discord.js";
 import * as country from "country-quiz";
-import randomColor from "randomcolor";
 import iso from "iso-3166-1";
 
 // Message Embed Variables
@@ -164,7 +163,7 @@ function answerEmbed(p: answerEmbedParams) {
   let messageId: string;
   if (p.isRight === true) {
     const embed = new Discord.MessageEmbed()
-      .setColor(randomColor().substring(1))
+      .setColor("317B22")
       .setAuthor("Transero the Quiz Whizz", avatar)
       .setDescription("You got the right answer.");
     return p.msg.channel
@@ -185,7 +184,7 @@ function answerEmbed(p: answerEmbedParams) {
       });
   } else {
     const embed = new Discord.MessageEmbed()
-      .setColor(randomColor().substring(1))
+      .setColor("B33F62")
       .setAuthor("Transero the Quiz Whizz", avatar)
       .setDescription("You got the wrong answer.")
       .setFooter(`The answer is ${"**" + p.answer + "**"}`);
@@ -250,7 +249,6 @@ interface quizQuestionParams {
 function quizQuestionEmbed(p: quizQuestionParams) {
   if (!isPlaying) return;
   let embed = new Discord.MessageEmbed()
-    .setColor(randomColor().substring(1))
     .setAuthor("Transero the Quiz Whizz", avatar)
     .setTitle(`Question:`);
   // 0 == Flag Country Flag Quiz
@@ -260,6 +258,7 @@ function quizQuestionEmbed(p: quizQuestionParams) {
     return p.msg.channel
       .send(
         embed
+          .setColor("1CCAD8")
           .setDescription("What Country is this flag from?")
           .setThumbnail(url)
           .addField(
@@ -283,7 +282,7 @@ function quizQuestionEmbed(p: quizQuestionParams) {
     return p.msg.channel
       .send(
         embed
-          .setColor(randomColor().substring(1))
+          .setColor("840032")
           .setAuthor("Transero the Quiz Whizz", avatar)
           .setDescription(
             `What is the capital city of **${p.quizQ.question}**?`
@@ -308,7 +307,7 @@ function quizQuestionEmbed(p: quizQuestionParams) {
     return p.msg.channel
       .send(
         embed
-          .setColor(randomColor().substring(1))
+          .setColor("87F5FB")
           .setAuthor("Transero the Quiz Whizz", avatar)
           .setDescription(`What country is **${p.quizQ.question}** in?`)
           .addField(

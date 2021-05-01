@@ -147,7 +147,7 @@ function disableHoldingCommand(input) {
 exports.disableHoldingCommand = disableHoldingCommand;
 function pickQuizEmbed(message) {
     return new Discord.MessageEmbed()
-        .setColor(randomcolor_1.default().substring(1))
+        .setColor("674771")
         .setAuthor("Transero the Quiz Whizz", avatar)
         .setDescription(message);
 }

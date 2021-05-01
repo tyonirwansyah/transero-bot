@@ -25,7 +25,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.countryCapitalQuiz = exports.capitalCityQuiz = exports.countryFlagQuiz = void 0;
 const Discord = __importStar(require("discord.js"));
 const country = __importStar(require("country-quiz"));
-const randomcolor_1 = __importDefault(require("randomcolor"));
 const iso_3166_1_1 = __importDefault(require("iso-3166-1"));
 // Message Embed Variables
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
@@ -162,7 +161,7 @@ function answerEmbed(p) {
     let messageId;
     if (p.isRight === true) {
         const embed = new Discord.MessageEmbed()
-            .setColor(randomcolor_1.default().substring(1))
+            .setColor("317B22")
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setDescription("You got the right answer.");
         return p.msg.channel
@@ -184,7 +183,7 @@ function answerEmbed(p) {
     }
     else {
         const embed = new Discord.MessageEmbed()
-            .setColor(randomcolor_1.default().substring(1))
+            .setColor("B33F62")
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setDescription("You got the wrong answer.")
             .setFooter(`The answer is ${"**" + p.answer + "**"}`);
@@ -234,7 +233,6 @@ function quizQuestionEmbed(p) {
     if (!isPlaying)
         return;
     let embed = new Discord.MessageEmbed()
-        .setColor(randomcolor_1.default().substring(1))
         .setAuthor("Transero the Quiz Whizz", avatar)
         .setTitle(`Question:`);
     // 0 == Flag Country Flag Quiz
@@ -243,6 +241,7 @@ function quizQuestionEmbed(p) {
         const url = flagToPng(p.imgUrl);
         return p.msg.channel
             .send(embed
+            .setColor("1CCAD8")
             .setDescription("What Country is this flag from?")
             .setThumbnail(url)
             .addField("Answers", `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`)
@@ -261,7 +260,7 @@ function quizQuestionEmbed(p) {
         const option = p.quizQ.options;
         return p.msg.channel
             .send(embed
-            .setColor(randomcolor_1.default().substring(1))
+            .setColor("840032")
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setDescription(`What is the capital city of **${p.quizQ.question}**?`)
             .addField("Answers", `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`)
@@ -279,7 +278,7 @@ function quizQuestionEmbed(p) {
         const option = p.quizQ.options;
         return p.msg.channel
             .send(embed
-            .setColor(randomcolor_1.default().substring(1))
+            .setColor("87F5FB")
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setDescription(`What country is **${p.quizQ.question}** in?`)
             .addField("Answers", `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`)

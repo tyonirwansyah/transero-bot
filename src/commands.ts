@@ -144,7 +144,7 @@ export function disableHoldingCommand(input: boolean) {
 
 function pickQuizEmbed(message: string) {
   return new Discord.MessageEmbed()
-    .setColor(randomColor().substring(1))
+    .setColor("674771")
     .setAuthor("Transero the Quiz Whizz", avatar)
     .setDescription(message);
 }
