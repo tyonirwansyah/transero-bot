@@ -32,7 +32,7 @@ const client = new Discord.Client({
 const PREFIX = "$";
 client.on("ready", () => {
     console.log("Bot Active");
-    client.user.setActivity("$transero");
+    client.user.setActivity("$trhelp");
 });
 client.on("message", (msg) => {
     if (msg.author.bot)

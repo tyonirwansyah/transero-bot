@@ -22,7 +22,7 @@ export function initializeTranslator(param: funcParams) {
   let language: string;
   let translatedRes: any;
   //
-  if (param.command === "translate") {
+  if (param.command === "tr") {
     if (param.argm.length <= 0) {
       return param.msg.reply("error: missing [language] [sentence]");
     }

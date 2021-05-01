@@ -11,7 +11,7 @@ const PREFIX = "$";
 
 client.on("ready", () => {
   console.log("Bot Active");
-  client.user.setActivity("$transero");
+  client.user.setActivity("$trhelp");
 });
 
 client.on("message", (msg: any) => {

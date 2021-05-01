@@ -38,7 +38,7 @@ function initializeTranslator(param) {
     let language;
     let translatedRes;
     //
-    if (param.command === "translate") {
+    if (param.command === "tr") {
         if (param.argm.length <= 0) {
             return param.msg.reply("error: missing [language] [sentence]");
         }
