@@ -106,35 +106,29 @@ export function initializeQuiz(param: funcParams, client: Discord.Client) {
     ) => {
       if (user.bot) return;
       const emojiName = reaction.emoji.name;
-      if (reaction.message.id === quizMsgId) {
-        if (notAnswered) {
-          switch (emojiName) {
-            case "📠":
-              param.msg.channel.send(
-                pickQuizEmbed("Picked Country Flag Quiz.")
-              );
-              quizL.countryFlagQuiz({ msg: param.msg, client: client });
-              notAnswered = false;
-              holdingQuizCommand = true;
-              param.msg.client.removeListener("messageReactionAdd", listener);
-              break;
-            case "🗽":
-              param.msg.channel.send(
-                pickQuizEmbed("Picked Capital City Quiz.")
-              );
-              quizL.capitalCityQuiz({ msg: param.msg, client: client });
-              notAnswered = false;
-              holdingQuizCommand = true;
-              param.msg.client.removeListener("messageReactionAdd", listener);
-              break;
-            case "👨‍🦯":
-              param.msg.channel.send(pickQuizEmbed("Picked Country Quiz."));
-              quizL.countryCapitalQuiz({ msg: param.msg, client: client });
-              notAnswered = false;
-              holdingQuizCommand = true;
-              param.msg.client.removeListener("messageReactionAdd", listener);
-              break;
-          }
+      if (reaction.message.id === quizMsgId && notAnswered) {
+        switch (emojiName) {
+          case "📠":
+            param.msg.channel.send(pickQuizEmbed("Picked Country Flag Quiz."));
+            quizL.countryFlagQuiz({ msg: param.msg, client: client });
+            notAnswered = false;
+            holdingQuizCommand = true;
+            param.msg.client.removeListener("messageReactionAdd", listener);
+            break;
+          case "🗽":
+            param.msg.channel.send(pickQuizEmbed("Picked Capital City Quiz."));
+            quizL.capitalCityQuiz({ msg: param.msg, client: client });
+            notAnswered = false;
+            holdingQuizCommand = true;
+            param.msg.client.removeListener("messageReactionAdd", listener);
+            break;
+          case "👨‍🦯":
+            param.msg.channel.send(pickQuizEmbed("Picked Country Quiz."));
+            quizL.countryCapitalQuiz({ msg: param.msg, client: client });
+            notAnswered = false;
+            holdingQuizCommand = true;
+            param.msg.client.removeListener("messageReactionAdd", listener);
+            break;
         }
       }
     };
