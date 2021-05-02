@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { initializeQuiz, initializeTranslator } from "./commands";
+import * as cmd from "./commands";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -23,8 +23,9 @@ client.on("message", (msg: any) => {
       .trim()
       .split(/\s+/);
     // Commands
-    initializeTranslator({ command: command, argm: argm, msg: msg });
-    initializeQuiz({ command: command, argm: argm, msg: msg }, client);
+    cmd.initializeTranslator({ command: command, argm: argm, msg: msg });
+    cmd.initializeMultipleTranslate({ command: command, argm: argm, msg: msg });
+    cmd.initializeQuiz({ command: command, argm: argm, msg: msg }, client);
   }
 });
 

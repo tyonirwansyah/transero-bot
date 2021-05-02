@@ -1,11 +1,15 @@
-import translate from "@vitalets/google-translate-api";
+import * as Discord from "discord.js";
+import translate, { ITranslateResponse } from "@vitalets/google-translate-api";
 import ISO6391 from "iso-639-1";
+import randomColor from "randomcolor";
 
-export function parseSentence(words: string[] | null) {
+const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
+
+export function parseSentence(words: string[] | string, parseNum: number = 1) {
   if (words === null) return;
   if (words[1] === "") return;
   let sentence: string = "";
-  for (let i = 1; i < words.length; i++) {
+  for (let i = parseNum; i < words.length; i++) {
     sentence += words[i] + " ";
   }
   return sentence;
@@ -27,15 +31,87 @@ export function parseLanguage(lang: string) {
   }
 }
 
+export function parseMultiLanguages(lang: string[], amountLang: number) {
+  let langs: string[] = [];
+  for (let i = 1; i < amountLang + 1; i++) {
+    langs.push(lang[i]);
+  }
+  langs.forEach((lang, val) => {
+    const languageConvert = ISO6391.getName(lang).toLowerCase();
+    if (lang.length == 2 && languages.has(languageConvert)) {
+      langs[val] = languages.get(languageConvert);
+    } else if (languages.has(lang)) {
+      langs[val] = languages.get(lang);
+    } else {
+      langs[val] = undefined;
+    }
+  });
+  if (langs.includes(undefined)) return (langs = undefined);
+  return langs;
+}
+
+interface translateParams {
+  sentence: string;
+  lang: string[];
+  msg: Discord.Message;
+}
+
 export async function translateText(sentence: string, lang: string) {
   try {
     const translateSentence = await translate(sentence, { to: lang });
     return await translateSentence;
-  } catch (error) {
-    return console.error(error);
+  } catch (e) {
+    return console.error(e);
   }
 }
-// All languages Map
+
+export function translateMultipleText(p: translateParams) {
+  let translationRes: Array<ITranslateResponse> = [];
+  let count: number = 0;
+  p.lang.forEach(async (l, _v, a) => {
+    try {
+      const translateSentence = await translate(p.sentence, { to: l });
+      translationRes.push(translateSentence);
+      count++;
+    } catch (e) {
+      console.error(e);
+    }
+    if (count === a.length) {
+      translateMultipleTextEmbed({ translations: translationRes, msg: p.msg });
+    }
+  });
+}
+
+interface translateMultipleTextEmbedParams {
+  translations: Array<ITranslateResponse>;
+  msg: Discord.Message;
+}
+
+function translateMultipleTextEmbed(p: translateMultipleTextEmbedParams) {
+  let embed = new Discord.MessageEmbed()
+    .setTitle("Translations:")
+    .setAuthor("Transero the Super Translator", avatar)
+    .setFooter("Click ✦ for more details, Thanks for translating.")
+    .setColor(randomColor().substring(1));
+  p.translations.forEach((tr: ITranslateResponse, val, arr) => {
+    const fromLang = ISO6391.getName(tr.from.language.iso);
+    const toLang = ISO6391.getName(tr.raw[1][1]);
+    const fromLangRaw = tr.from.language.iso;
+    const toLangRaw = tr.raw[1][1];
+    const urlSentence = tr.raw[1][4][0].replace(/\s/g, "%20").trim();
+    const link = `[✦](https://translate.google.com/?sl=${fromLangRaw}&tl=${toLangRaw}&text=${urlSentence}&op=translate)`;
+    embed.addField(
+      `${fromLang} to ${toLang}:`,
+      `${link} ${tr.text.replace(/^./, tr.text[0].toUpperCase())} ${
+        tr.pronunciation != null ? `\n${tr.pronunciation}` : ""
+      }`
+    );
+    if (val + 1 === arr.length) {
+      p.msg.channel.send(embed);
+    }
+  });
+}
+
 let languages = new Map();
 languages.set("afrikaans", "af");
 languages.set("albanian", "sq");
@@ -50,7 +126,8 @@ languages.set("bosnian", "bs");
 languages.set("bulgarian", "bg");
 languages.set("catalan", "ca");
 languages.set("cebuano", "ceb");
-languages.set("chinese", "zh");
+languages.set("chinese", "zh-CN");
+languages.set("chinesetr", "zh-TW");
 languages.set("corsican", "co");
 languages.set("croatian", "hr");
 languages.set("czech", "cs");

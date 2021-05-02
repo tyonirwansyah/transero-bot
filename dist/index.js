@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Discord = __importStar(require("discord.js"));
-const commands_1 = require("./commands");
+const cmd = __importStar(require("./commands"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const client = new Discord.Client({
@@ -44,8 +44,9 @@ client.on("message", (msg) => {
             .trim()
             .split(/\s+/);
         // Commands
-        commands_1.initializeTranslator({ command: command, argm: argm, msg: msg });
-        commands_1.initializeQuiz({ command: command, argm: argm, msg: msg }, client);
+        cmd.initializeTranslator({ command: command, argm: argm, msg: msg });
+        cmd.initializeMultipleTranslate({ command: command, argm: argm, msg: msg });
+        cmd.initializeQuiz({ command: command, argm: argm, msg: msg }, client);
     }
 });
 client.login(process.env.DISCORD_TOKEN);

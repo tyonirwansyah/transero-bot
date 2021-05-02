@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.disableHoldingCommand = exports.initializeQuiz = exports.initializeTranslator = void 0;
+exports.disableHoldingCommand = exports.initializeQuiz = exports.initializeMultipleTranslate = exports.initializeTranslator = void 0;
 const Discord = __importStar(require("discord.js"));
 const transL = __importStar(require("./commandUtils/translate"));
 const quizL = __importStar(require("./commandUtils/quiz"));
@@ -63,7 +63,7 @@ function initializeTranslator(param) {
                 .setColor(randomcolor_1.default().substring(1))
                 .setAuthor("Transero the Great", avatar)
                 .setTitle("Translate:")
-                .setDescription(`**${iso_639_1_1.default.getName(fromLanguage)}** to **${iso_639_1_1.default.getName(language)}**`)
+                .setDescription(`**${iso_639_1_1.default.getName(fromLanguage)}** to **${language.startsWith("zh") ? "Chinese" : iso_639_1_1.default.getName(language)}**`)
                 .addField("From:", sentence)
                 .addField("To:", translatedRes.text)
                 .addField("More Details:", `[Google Translate](https://translate.google.com/?sl=${fromLanguage}&tl=${language}&text=${urlSentence}&op=translate)`);
@@ -73,6 +73,37 @@ function initializeTranslator(param) {
     }
 }
 exports.initializeTranslator = initializeTranslator;
+function initializeMultipleTranslate(param) {
+    let amountLanguages;
+    let sentence;
+    let language;
+    if (param.command === "trm") {
+        if (isNaN(parseInt(param.argm[0]))) {
+            return param.msg.reply("error: [amountLanguages] Not a number");
+        }
+        else if (parseInt(param.argm[0]) > 3) {
+            return param.msg.reply("error: [amountLanguages] Maximum 3 languages");
+        }
+        else if (parseInt(param.argm[0]) === 1) {
+            return param.msg.reply("Why one language, use **$tr** instead");
+        }
+        amountLanguages = parseInt(param.argm[0]);
+        sentence = transL.parseSentence(param.argm, amountLanguages + 1);
+        language = transL.parseMultiLanguages(param.argm, amountLanguages);
+        if (language === undefined) {
+            return param.msg.reply("error: [Languages] one of the language doesn't exist or not supported");
+        }
+        if (sentence === "") {
+            return param.msg.reply("error: [sentence] missing sentence");
+        }
+        transL.translateMultipleText({
+            sentence: sentence,
+            lang: language,
+            msg: param.msg,
+        });
+    }
+}
+exports.initializeMultipleTranslate = initializeMultipleTranslate;
 // Quiz Command
 function initializeQuiz(param, client) {
     // Variable

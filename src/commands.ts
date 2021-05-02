@@ -48,9 +48,9 @@ export function initializeTranslator(param: funcParams) {
           .setAuthor("Transero the Great", avatar)
           .setTitle("Translate:")
           .setDescription(
-            `**${ISO6391.getName(fromLanguage)}** to **${ISO6391.getName(
-              language
-            )}**`
+            `**${ISO6391.getName(fromLanguage)}** to **${
+              language.startsWith("zh") ? "Chinese" : ISO6391.getName(language)
+            }**`
           )
           .addField("From:", sentence)
           .addField("To:", translatedRes.text)
@@ -61,6 +61,37 @@ export function initializeTranslator(param: funcParams) {
         param.msg.channel.send(resultMessage);
       })
       .catch((e: any) => console.error(e));
+  }
+}
+
+export function initializeMultipleTranslate(param: funcParams) {
+  let amountLanguages: number;
+  let sentence: any;
+  let language: any;
+  if (param.command === "trm") {
+    if (isNaN(parseInt(param.argm[0]))) {
+      return param.msg.reply("error: [amountLanguages] Not a number");
+    } else if (parseInt(param.argm[0]) > 3) {
+      return param.msg.reply("error: [amountLanguages] Maximum 3 languages");
+    } else if (parseInt(param.argm[0]) === 1) {
+      return param.msg.reply("Why one language, use **$tr** instead");
+    }
+    amountLanguages = parseInt(param.argm[0]);
+    sentence = transL.parseSentence(param.argm, amountLanguages + 1);
+    language = transL.parseMultiLanguages(param.argm, amountLanguages);
+    if (language === undefined) {
+      return param.msg.reply(
+        "error: [Languages] one of the language doesn't exist or not supported"
+      );
+    }
+    if (sentence === "") {
+      return param.msg.reply("error: [sentence] missing sentence");
+    }
+    transL.translateMultipleText({
+      sentence: sentence,
+      lang: language,
+      msg: param.msg,
+    });
   }
 }
 

@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,16 +31,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.translateText = exports.parseLanguage = exports.parseSentence = void 0;
+exports.translateMultipleText = exports.translateText = exports.parseMultiLanguages = exports.parseLanguage = exports.parseSentence = void 0;
+const Discord = __importStar(require("discord.js"));
 const google_translate_api_1 = __importDefault(require("@vitalets/google-translate-api"));
 const iso_639_1_1 = __importDefault(require("iso-639-1"));
-function parseSentence(words) {
+const randomcolor_1 = __importDefault(require("randomcolor"));
+const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
+function parseSentence(words, parseNum = 1) {
     if (words === null)
         return;
     if (words[1] === "")
         return;
     let sentence = "";
-    for (let i = 1; i < words.length; i++) {
+    for (let i = parseNum; i < words.length; i++) {
         sentence += words[i] + " ";
     }
     return sentence;
@@ -45,19 +67,77 @@ function parseLanguage(lang) {
     }
 }
 exports.parseLanguage = parseLanguage;
+function parseMultiLanguages(lang, amountLang) {
+    let langs = [];
+    for (let i = 1; i < amountLang + 1; i++) {
+        langs.push(lang[i]);
+    }
+    langs.forEach((lang, val) => {
+        const languageConvert = iso_639_1_1.default.getName(lang).toLowerCase();
+        if (lang.length == 2 && languages.has(languageConvert)) {
+            langs[val] = languages.get(languageConvert);
+        }
+        else if (languages.has(lang)) {
+            langs[val] = languages.get(lang);
+        }
+        else {
+            langs[val] = undefined;
+        }
+    });
+    if (langs.includes(undefined))
+        return (langs = undefined);
+    return langs;
+}
+exports.parseMultiLanguages = parseMultiLanguages;
 function translateText(sentence, lang) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const translateSentence = yield google_translate_api_1.default(sentence, { to: lang });
             return yield translateSentence;
         }
-        catch (error) {
-            return console.error(error);
+        catch (e) {
+            return console.error(e);
         }
     });
 }
 exports.translateText = translateText;
-// All languages Map
+function translateMultipleText(p) {
+    let translationRes = [];
+    let count = 0;
+    p.lang.forEach((l, _v, a) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const translateSentence = yield google_translate_api_1.default(p.sentence, { to: l });
+            translationRes.push(translateSentence);
+            count++;
+        }
+        catch (e) {
+            console.error(e);
+        }
+        if (count === a.length) {
+            translateMultipleTextEmbed({ translations: translationRes, msg: p.msg });
+        }
+    }));
+}
+exports.translateMultipleText = translateMultipleText;
+function translateMultipleTextEmbed(p) {
+    let embed = new Discord.MessageEmbed()
+        .setTitle("Translations:")
+        .setAuthor("Transero the Super Translator", avatar)
+        .setFooter("Click ✦ for more details, Thanks for translating.")
+        .setColor(randomcolor_1.default().substring(1));
+    p.translations.forEach((tr, val, arr) => {
+        const fromLang = iso_639_1_1.default.getName(tr.from.language.iso);
+        const toLang = iso_639_1_1.default.getName(tr.raw[1][1]);
+        const fromLangRaw = tr.from.language.iso;
+        const toLangRaw = tr.raw[1][1];
+        const urlSentence = tr.raw[1][4][0].replace(/\s/g, "%20").trim();
+        const link = `[✦](https://translate.google.com/?sl=${fromLangRaw}&tl=${toLangRaw}&text=${urlSentence}&op=translate)`;
+        embed.addField(`${fromLang} to ${toLang}:`, `${link} ${tr.text.replace(/^./, tr.text[0].toUpperCase())} ${tr.pronunciation != null ? `\n${tr.pronunciation}` : ""}`);
+        if (val + 1 === arr.length) {
+            p.msg.channel.send(embed);
+        }
+    });
+}
 let languages = new Map();
 languages.set("afrikaans", "af");
 languages.set("albanian", "sq");
@@ -72,7 +152,8 @@ languages.set("bosnian", "bs");
 languages.set("bulgarian", "bg");
 languages.set("catalan", "ca");
 languages.set("cebuano", "ceb");
-languages.set("chinese", "zh");
+languages.set("chinese", "zh-CN");
+languages.set("chinesetr", "zh-TW");
 languages.set("corsican", "co");
 languages.set("croatian", "hr");
 languages.set("czech", "cs");
