@@ -7,6 +7,7 @@ const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4
 
 export function parseSentence(words: string[] | string, parseNum: number = 1) {
   if (words === null) return;
+  if (words === undefined) return;
   if (words[1] === "") return;
   let sentence: string = "";
   for (let i = parseNum; i < words.length; i++) {
@@ -32,35 +33,35 @@ export function parseLanguage(lang: string) {
 }
 
 export function parseMultiLanguages(lang: string[], amountLang: number) {
-  let langs: string[] = [];
+  let langs: string[] | undefined = [];
   for (let i = 1; i < amountLang + 1; i++) {
     langs.push(lang[i]);
   }
   langs.forEach((lang, val) => {
     const languageConvert = ISO6391.getName(lang).toLowerCase();
     if (lang.length == 2 && languages.has(languageConvert)) {
-      langs[val] = languages.get(languageConvert);
+      langs![val] = languages.get(languageConvert);
     } else if (languages.has(lang)) {
-      langs[val] = languages.get(lang);
+      langs![val] = languages.get(lang);
     } else {
-      langs[val] = undefined;
+      langs = undefined;
     }
   });
-  if (langs.includes(undefined)) return (langs = undefined);
   return langs;
 }
 
 interface translateParams {
-  sentence: string;
+  sentence: string | undefined;
   langS?: string;
   langM?: string[];
   msg: Discord.Message;
 }
 
 export async function translateText(p: translateParams) {
+  if (p.sentence === undefined) return;
   try {
     const trRes = await translate(p.sentence, {
-      to: p.langS.toString(),
+      to: p.langS!.toString(),
     });
     const urlSentence = trRes.raw[1][4][0]
       .replace(/\s/g, "%20")
@@ -92,7 +93,8 @@ export async function translateText(p: translateParams) {
 export function translateMultipleText(p: translateParams) {
   let translationRes: Array<ITranslateResponse> = [];
   let count: number = 0;
-  p.langM.forEach(async (l, _v, a) => {
+  p.langM!.forEach(async (l, _v, a) => {
+    if (p.sentence === undefined) return;
     try {
       const translateSentence = await translate(p.sentence, { to: l });
       translationRes.push(translateSentence);

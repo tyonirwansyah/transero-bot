@@ -38,7 +38,6 @@ client.on("message", (msg) => {
     if (msg.author.bot)
         return null;
     if (msg.content.startsWith(PREFIX)) {
-        // Spliting the command
         const [command, ...argm] = msg.content
             .substring(PREFIX.length)
             .trim()

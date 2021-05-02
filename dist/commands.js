@@ -32,16 +32,12 @@ const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4
 let holdingQuizCommand = false;
 // Translate Command
 function initializeTranslator(param) {
-    // Translator variables
-    let sentence;
-    let language;
-    //
     if (param.command === "tr") {
         if (param.argm.length <= 0) {
             return param.msg.reply("error: missing [language] [sentence]");
         }
-        sentence = transL.parseSentence(param.argm);
-        language = transL.parseLanguage(param.argm[0].toLowerCase());
+        const sentence = transL.parseSentence(param.argm);
+        const language = transL.parseLanguage(param.argm[0].toLowerCase());
         if (sentence === "") {
             return param.msg.reply("error: [sentence] missing");
         }
@@ -57,9 +53,6 @@ function initializeTranslator(param) {
 }
 exports.initializeTranslator = initializeTranslator;
 function initializeMultipleTranslate(param) {
-    let amountLanguages;
-    let sentence;
-    let language;
     if (param.command === "trm") {
         if (isNaN(parseInt(param.argm[0]))) {
             return param.msg.reply("error: [amountLanguages] Not a number");
@@ -70,9 +63,9 @@ function initializeMultipleTranslate(param) {
         else if (parseInt(param.argm[0]) === 1) {
             return param.msg.reply("Why one language, use **$tr** instead");
         }
-        amountLanguages = parseInt(param.argm[0]);
-        sentence = transL.parseSentence(param.argm, amountLanguages + 1);
-        language = transL.parseMultiLanguages(param.argm, amountLanguages);
+        const amountLanguages = parseInt(param.argm[0]);
+        const sentence = transL.parseSentence(param.argm, amountLanguages + 1);
+        const language = transL.parseMultiLanguages(param.argm, amountLanguages);
         if (language === undefined) {
             return param.msg.reply("error: [Languages] one of the language doesn't exist or not supported");
         }

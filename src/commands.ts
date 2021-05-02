@@ -16,16 +16,12 @@ interface funcParams {
 
 // Translate Command
 export function initializeTranslator(param: funcParams) {
-  // Translator variables
-  let sentence: string;
-  let language: string;
-  //
   if (param.command === "tr") {
     if (param.argm.length <= 0) {
       return param.msg.reply("error: missing [language] [sentence]");
     }
-    sentence = transL.parseSentence(param.argm);
-    language = transL.parseLanguage(param.argm[0].toLowerCase());
+    const sentence = transL.parseSentence(param.argm);
+    const language = transL.parseLanguage(param.argm[0].toLowerCase());
     if (sentence === "") {
       return param.msg.reply("error: [sentence] missing");
     }
@@ -43,9 +39,6 @@ export function initializeTranslator(param: funcParams) {
 }
 
 export function initializeMultipleTranslate(param: funcParams) {
-  let amountLanguages: number;
-  let sentence: any;
-  let language: any;
   if (param.command === "trm") {
     if (isNaN(parseInt(param.argm[0]))) {
       return param.msg.reply("error: [amountLanguages] Not a number");
@@ -54,9 +47,9 @@ export function initializeMultipleTranslate(param: funcParams) {
     } else if (parseInt(param.argm[0]) === 1) {
       return param.msg.reply("Why one language, use **$tr** instead");
     }
-    amountLanguages = parseInt(param.argm[0]);
-    sentence = transL.parseSentence(param.argm, amountLanguages + 1);
-    language = transL.parseMultiLanguages(param.argm, amountLanguages);
+    const amountLanguages = parseInt(param.argm[0]);
+    const sentence = transL.parseSentence(param.argm, amountLanguages + 1);
+    const language = transL.parseMultiLanguages(param.argm, amountLanguages);
     if (language === undefined) {
       return param.msg.reply(
         "error: [Languages] one of the language doesn't exist or not supported"
@@ -111,7 +104,7 @@ export function initializeQuiz(param: funcParams, client: Discord.Client) {
     });
     const listener = (
       reaction: Discord.MessageReaction,
-      user: Discord.User
+      user: Discord.User | Discord.PartialUser
     ) => {
       if (user.bot) return;
       const emojiName = reaction.emoji.name;

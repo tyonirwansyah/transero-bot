@@ -4,20 +4,19 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const client = new Discord.Client({
+const client: Discord.Client = new Discord.Client({
   partials: ["MESSAGE"],
 });
 const PREFIX = "$";
 
 client.on("ready", () => {
   console.log("Bot Active");
-  client.user.setActivity("$trhelp");
+  client!.user!.setActivity("$trhelp");
 });
 
 client.on("message", (msg: any) => {
   if (msg.author.bot) return null;
   if (msg.content.startsWith(PREFIX)) {
-    // Spliting the command
     const [command, ...argm] = msg.content
       .substring(PREFIX.length)
       .trim()

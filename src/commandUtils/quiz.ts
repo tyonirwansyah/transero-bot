@@ -31,10 +31,13 @@ export function countryFlagQuiz(p: quizParams) {
     msg: p.msg,
     imgUrl: quiz.questions[0].question,
   });
-  const listener = (reaction: Discord.MessageReaction, user: Discord.User) => {
+  const listener = (
+    reaction: Discord.MessageReaction,
+    user: Discord.User | Discord.PartialUser
+  ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
-    const fetchMessage = p.msg.channel.lastMessage.id;
+    const fetchMessage = p!.msg!.channel!.lastMessage!.id;
     if (reaction.message.id === fetchMessage && notAnswered) {
       const answerKey = quiz.questions[0];
       checkAnswers({
@@ -42,10 +45,10 @@ export function countryFlagQuiz(p: quizParams) {
         client: p.client,
         answerKey: answerKey,
         emoji: emojiName,
-        listener: listener,
         gameMode: 0,
       });
       notAnswered = false;
+      p.client.removeListener("messageReactionAdd", listener);
     }
   };
   p.client.on("messageReactionAdd", listener);
@@ -61,11 +64,15 @@ export function capitalCityQuiz(p: quizParams) {
     quizQ: quiz.questions[0],
     typeQuiz: 1,
     msg: p.msg,
+    imgUrl: "",
   });
-  const listener = (reaction: Discord.MessageReaction, user: Discord.User) => {
+  const listener = (
+    reaction: Discord.MessageReaction,
+    user: Discord.User | Discord.PartialUser
+  ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
-    const fetchMessage = p.msg.channel.lastMessage.id;
+    const fetchMessage = p.msg!.channel!.lastMessage!.id;
     if (reaction.message.id === fetchMessage && notAnswered) {
       const answerKey = quiz.questions[0];
       checkAnswers({
@@ -73,10 +80,10 @@ export function capitalCityQuiz(p: quizParams) {
         client: p.client,
         answerKey: answerKey,
         emoji: emojiName,
-        listener: listener,
         gameMode: 1,
       });
       notAnswered = false;
+      p.client.removeListener("messageReactionAdd", listener);
     }
   };
   p.client.on("messageReactionAdd", listener);
@@ -92,11 +99,15 @@ export function countryCapitalQuiz(p: quizParams) {
     quizQ: quiz.questions[0],
     typeQuiz: 2,
     msg: p.msg,
+    imgUrl: "",
   });
-  const listener = (reaction: Discord.MessageReaction, user: Discord.User) => {
+  const listener = (
+    reaction: Discord.MessageReaction,
+    user: Discord.User | Discord.PartialUser
+  ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
-    const fetchMessage = p.msg.channel.lastMessage.id;
+    const fetchMessage = p.msg!.channel!.lastMessage!.id;
     if (reaction.message.id === fetchMessage && notAnswered) {
       const answerKey = quiz.questions[0];
       checkAnswers({
@@ -104,10 +115,10 @@ export function countryCapitalQuiz(p: quizParams) {
         client: p.client,
         answerKey: answerKey,
         emoji: emojiName,
-        listener: listener,
         gameMode: 2,
       });
       notAnswered = false;
+      p.client.removeListener("messageReactionAdd", listener);
     }
   };
   p.client.on("messageReactionAdd", listener);
@@ -129,6 +140,7 @@ interface verifyAnswerParams {
   answer: string;
   input: string;
   msg: Discord.Message;
+  client: Discord.Client;
   gameMode: number;
 }
 
@@ -139,6 +151,7 @@ function verifyAnswer(p: verifyAnswerParams) {
       isRight: true,
       msg: p.msg,
       gameMode: p.gameMode,
+      client: p.client,
     });
   } else if (p.answer != p.input) {
     return answerEmbed({
@@ -146,6 +159,7 @@ function verifyAnswer(p: verifyAnswerParams) {
       msg: p.msg,
       answer: p.answer.toUpperCase(),
       gameMode: p.gameMode,
+      client: p.client,
     });
   }
 }
@@ -155,12 +169,12 @@ function verifyAnswer(p: verifyAnswerParams) {
 interface answerEmbedParams {
   isRight: boolean;
   msg: Discord.Message;
+  client: Discord.Client;
   answer?: string;
   gameMode: number;
 }
 
 function answerEmbed(p: answerEmbedParams) {
-  let messageId: string;
   if (p.isRight === true) {
     const embed = new Discord.MessageEmbed()
       .setColor("317B22")
@@ -171,13 +185,23 @@ function answerEmbed(p: answerEmbedParams) {
       .then((message) => {
         message.react("🚫");
         message.react("⏭");
-        messageId = message.id;
-        continueQuiz({
-          Id: messageId,
-          client: p.msg.client,
-          msg: p.msg,
-          gameMode: p.gameMode,
-        });
+        const listener = (
+          reaction: Discord.MessageReaction,
+          user: Discord.User | Discord.PartialUser
+        ) => {
+          if (user.bot) return;
+          const emojiName = reaction.emoji.name;
+          if (reaction.message.id === message.id) {
+            continueQuiz({
+              client: p.msg.client,
+              msg: p.msg,
+              gameMode: p.gameMode,
+              emoji: emojiName,
+            });
+            p.client.removeListener("messageReactionAdd", listener);
+          }
+        };
+        p.client.on("messageReactionAdd", listener);
       })
       .catch((e) => {
         console.error(e);
@@ -193,13 +217,23 @@ function answerEmbed(p: answerEmbedParams) {
       .then((message) => {
         message.react("🚫");
         message.react("⏭");
-        messageId = message.id;
-        continueQuiz({
-          Id: messageId,
-          client: p.msg.client,
-          msg: p.msg,
-          gameMode: p.gameMode,
-        });
+        const listener = (
+          reaction: Discord.MessageReaction,
+          user: Discord.User | Discord.PartialUser
+        ) => {
+          if (user.bot) return;
+          const emojiName = reaction.emoji.name;
+          if (reaction.message.id === message.id) {
+            continueQuiz({
+              client: p.msg.client,
+              msg: p.msg,
+              gameMode: p.gameMode,
+              emoji: emojiName,
+            });
+            p.client.removeListener("messageReactionAdd", listener);
+          }
+        };
+        p.client.on("messageReactionAdd", listener);
       })
       .catch((e) => {
         console.error(e);
@@ -208,41 +242,32 @@ function answerEmbed(p: answerEmbedParams) {
 }
 
 interface continueQuizParams {
-  Id: string;
   client: Discord.Client;
   msg: Discord.Message;
   gameMode: number;
+  emoji: string;
 }
 
 function continueQuiz(p: continueQuizParams) {
-  const listener = (reaction: Discord.MessageReaction, user: Discord.User) => {
-    if (user.bot) return;
-    const emojiName = reaction.emoji.name;
-    if (reaction.message.id === p.Id) {
-      switch (emojiName) {
-        case "⏭":
-          if (p.gameMode === 0)
-            return countryFlagQuiz({ client: p.client, msg: p.msg });
-          if (p.gameMode === 1)
-            return capitalCityQuiz({ client: p.client, msg: p.msg });
-          if (p.gameMode === 2)
-            return countryCapitalQuiz({ client: p.client, msg: p.msg });
-          p.client.removeListener("messageReactionAdd", listener);
-          break;
-        case "🚫":
-          p.client.removeListener("messageReactionAdd", listener);
-          break;
-      }
-    }
-  };
-  return p.client.on("messageReactionAdd", listener);
+  switch (p.emoji) {
+    case "⏭":
+      if (p.gameMode === 0)
+        return countryFlagQuiz({ client: p.client, msg: p.msg });
+      if (p.gameMode === 1)
+        return capitalCityQuiz({ client: p.client, msg: p.msg });
+      if (p.gameMode === 2)
+        return countryCapitalQuiz({ client: p.client, msg: p.msg });
+      break;
+    case "🚫":
+      break;
+  }
 }
 
 interface quizQuestionParams {
   quizQ: any;
   typeQuiz: number;
   msg: Discord.Message;
-  imgUrl?: string;
+  imgUrl: string;
   quiz?: any;
 }
 
@@ -333,7 +358,6 @@ interface checkAnswersParams {
   client: Discord.Client;
   answerKey: string[];
   emoji: string;
-  listener: any;
   gameMode: number;
 }
 
@@ -346,8 +370,8 @@ function checkAnswers(p: checkAnswersParams) {
         input: options[0],
         msg: p.msg,
         gameMode: p.gameMode,
+        client: p.client,
       });
-      p.client.removeListener("messageReactionAdd", p.listener);
       break;
     case "2️⃣":
       verifyAnswer({
@@ -355,8 +379,8 @@ function checkAnswers(p: checkAnswersParams) {
         input: options[1],
         msg: p.msg,
         gameMode: p.gameMode,
+        client: p.client,
       });
-      p.client.removeListener("messageReactionAdd", p.listener);
       break;
     case "3️⃣":
       verifyAnswer({
@@ -364,8 +388,8 @@ function checkAnswers(p: checkAnswersParams) {
         input: options[2],
         msg: p.msg,
         gameMode: p.gameMode,
+        client: p.client,
       });
-      p.client.removeListener("messageReactionAdd", p.listener);
       break;
     case "4️⃣":
       verifyAnswer({
@@ -373,8 +397,8 @@ function checkAnswers(p: checkAnswersParams) {
         input: options[3],
         msg: p.msg,
         gameMode: p.gameMode,
+        client: p.client,
       });
-      p.client.removeListener("messageReactionAdd", p.listener);
       break;
   }
 }

@@ -40,6 +40,8 @@ const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4
 function parseSentence(words, parseNum = 1) {
     if (words === null)
         return;
+    if (words === undefined)
+        return;
     if (words[1] === "")
         return;
     let sentence = "";
@@ -81,16 +83,16 @@ function parseMultiLanguages(lang, amountLang) {
             langs[val] = languages.get(lang);
         }
         else {
-            langs[val] = undefined;
+            langs = undefined;
         }
     });
-    if (langs.includes(undefined))
-        return (langs = undefined);
     return langs;
 }
 exports.parseMultiLanguages = parseMultiLanguages;
 function translateText(p) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (p.sentence === undefined)
+            return;
         try {
             const trRes = yield google_translate_api_1.default(p.sentence, {
                 to: p.langS.toString(),
@@ -121,6 +123,8 @@ function translateMultipleText(p) {
     let translationRes = [];
     let count = 0;
     p.langM.forEach((l, _v, a) => __awaiter(this, void 0, void 0, function* () {
+        if (p.sentence === undefined)
+            return;
         try {
             const translateSentence = yield google_translate_api_1.default(p.sentence, { to: l });
             translationRes.push(translateSentence);

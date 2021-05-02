@@ -58,10 +58,10 @@ function countryFlagQuiz(p) {
                 client: p.client,
                 answerKey: answerKey,
                 emoji: emojiName,
-                listener: listener,
                 gameMode: 0,
             });
             notAnswered = false;
+            p.client.removeListener("messageReactionAdd", listener);
         }
     };
     p.client.on("messageReactionAdd", listener);
@@ -77,6 +77,7 @@ function capitalCityQuiz(p) {
         quizQ: quiz.questions[0],
         typeQuiz: 1,
         msg: p.msg,
+        imgUrl: "",
     });
     const listener = (reaction, user) => {
         if (user.bot)
@@ -90,10 +91,10 @@ function capitalCityQuiz(p) {
                 client: p.client,
                 answerKey: answerKey,
                 emoji: emojiName,
-                listener: listener,
                 gameMode: 1,
             });
             notAnswered = false;
+            p.client.removeListener("messageReactionAdd", listener);
         }
     };
     p.client.on("messageReactionAdd", listener);
@@ -109,6 +110,7 @@ function countryCapitalQuiz(p) {
         quizQ: quiz.questions[0],
         typeQuiz: 2,
         msg: p.msg,
+        imgUrl: "",
     });
     const listener = (reaction, user) => {
         if (user.bot)
@@ -122,10 +124,10 @@ function countryCapitalQuiz(p) {
                 client: p.client,
                 answerKey: answerKey,
                 emoji: emojiName,
-                listener: listener,
                 gameMode: 2,
             });
             notAnswered = false;
+            p.client.removeListener("messageReactionAdd", listener);
         }
     };
     p.client.on("messageReactionAdd", listener);
@@ -146,6 +148,7 @@ function verifyAnswer(p) {
             isRight: true,
             msg: p.msg,
             gameMode: p.gameMode,
+            client: p.client,
         });
     }
     else if (p.answer != p.input) {
@@ -154,11 +157,11 @@ function verifyAnswer(p) {
             msg: p.msg,
             answer: p.answer.toUpperCase(),
             gameMode: p.gameMode,
+            client: p.client,
         });
     }
 }
 function answerEmbed(p) {
-    let messageId;
     if (p.isRight === true) {
         const embed = new Discord.MessageEmbed()
             .setColor("317B22")
@@ -169,13 +172,21 @@ function answerEmbed(p) {
             .then((message) => {
             message.react("🚫");
             message.react("⏭");
-            messageId = message.id;
-            continueQuiz({
-                Id: messageId,
-                client: p.msg.client,
-                msg: p.msg,
-                gameMode: p.gameMode,
-            });
+            const listener = (reaction, user) => {
+                if (user.bot)
+                    return;
+                const emojiName = reaction.emoji.name;
+                if (reaction.message.id === message.id) {
+                    continueQuiz({
+                        client: p.msg.client,
+                        msg: p.msg,
+                        gameMode: p.gameMode,
+                        emoji: emojiName,
+                    });
+                    p.client.removeListener("messageReactionAdd", listener);
+                }
+            };
+            p.client.on("messageReactionAdd", listener);
         })
             .catch((e) => {
             console.error(e);
@@ -192,13 +203,21 @@ function answerEmbed(p) {
             .then((message) => {
             message.react("🚫");
             message.react("⏭");
-            messageId = message.id;
-            continueQuiz({
-                Id: messageId,
-                client: p.msg.client,
-                msg: p.msg,
-                gameMode: p.gameMode,
-            });
+            const listener = (reaction, user) => {
+                if (user.bot)
+                    return;
+                const emojiName = reaction.emoji.name;
+                if (reaction.message.id === message.id) {
+                    continueQuiz({
+                        client: p.msg.client,
+                        msg: p.msg,
+                        gameMode: p.gameMode,
+                        emoji: emojiName,
+                    });
+                    p.client.removeListener("messageReactionAdd", listener);
+                }
+            };
+            p.client.on("messageReactionAdd", listener);
         })
             .catch((e) => {
             console.error(e);
@@ -206,28 +225,18 @@ function answerEmbed(p) {
     }
 }
 function continueQuiz(p) {
-    const listener = (reaction, user) => {
-        if (user.bot)
-            return;
-        const emojiName = reaction.emoji.name;
-        if (reaction.message.id === p.Id) {
-            switch (emojiName) {
-                case "⏭":
-                    if (p.gameMode === 0)
-                        return countryFlagQuiz({ client: p.client, msg: p.msg });
-                    if (p.gameMode === 1)
-                        return capitalCityQuiz({ client: p.client, msg: p.msg });
-                    if (p.gameMode === 2)
-                        return countryCapitalQuiz({ client: p.client, msg: p.msg });
-                    p.client.removeListener("messageReactionAdd", listener);
-                    break;
-                case "🚫":
-                    p.client.removeListener("messageReactionAdd", listener);
-                    break;
-            }
-        }
-    };
-    return p.client.on("messageReactionAdd", listener);
+    switch (p.emoji) {
+        case "⏭":
+            if (p.gameMode === 0)
+                return countryFlagQuiz({ client: p.client, msg: p.msg });
+            if (p.gameMode === 1)
+                return capitalCityQuiz({ client: p.client, msg: p.msg });
+            if (p.gameMode === 2)
+                return countryCapitalQuiz({ client: p.client, msg: p.msg });
+            break;
+        case "🚫":
+            break;
+    }
 }
 function quizQuestionEmbed(p) {
     if (!isPlaying)
@@ -304,8 +313,8 @@ function checkAnswers(p) {
                 input: options[0],
                 msg: p.msg,
                 gameMode: p.gameMode,
+                client: p.client,
             });
-            p.client.removeListener("messageReactionAdd", p.listener);
             break;
         case "2️⃣":
             verifyAnswer({
@@ -313,8 +322,8 @@ function checkAnswers(p) {
                 input: options[1],
                 msg: p.msg,
                 gameMode: p.gameMode,
+                client: p.client,
             });
-            p.client.removeListener("messageReactionAdd", p.listener);
             break;
         case "3️⃣":
             verifyAnswer({
@@ -322,8 +331,8 @@ function checkAnswers(p) {
                 input: options[2],
                 msg: p.msg,
                 gameMode: p.gameMode,
+                client: p.client,
             });
-            p.client.removeListener("messageReactionAdd", p.listener);
             break;
         case "4️⃣":
             verifyAnswer({
@@ -331,8 +340,8 @@ function checkAnswers(p) {
                 input: options[3],
                 msg: p.msg,
                 gameMode: p.gameMode,
+                client: p.client,
             });
-            p.client.removeListener("messageReactionAdd", p.listener);
             break;
     }
 }
