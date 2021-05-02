@@ -2,7 +2,6 @@ import * as Discord from "discord.js";
 import * as transL from "./commandUtils/translate";
 import * as quizL from "./commandUtils/quiz";
 import randomColor from "randomcolor";
-import ISO6391 from "iso-639-1";
 
 // For Message Embed
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
@@ -18,9 +17,8 @@ interface funcParams {
 // Translate Command
 export function initializeTranslator(param: funcParams) {
   // Translator variables
-  let sentence: any;
+  let sentence: string;
   let language: string;
-  let translatedRes: any;
   //
   if (param.command === "tr") {
     if (param.argm.length <= 0) {
@@ -28,39 +26,19 @@ export function initializeTranslator(param: funcParams) {
     }
     sentence = transL.parseSentence(param.argm);
     language = transL.parseLanguage(param.argm[0].toLowerCase());
-    if (sentence.length <= 0) {
-      return param.msg.reply("error: missing [sentence]");
+    if (sentence === "") {
+      return param.msg.reply("error: [sentence] missing");
     }
     if (language === "") {
-      return param.msg.reply("error: language doesn't exist or not supported");
+      return param.msg.reply(
+        "error: [language] doesn't exist or not supported"
+      );
     }
-    transL
-      .translateText(sentence, language)
-      .then((d) => {
-        translatedRes = d;
-        const urlSentence = sentence
-          .replace(/\s/g, "%20")
-          .replace(/\s+/g, "")
-          .trim();
-        const fromLanguage = translatedRes.from.language.iso;
-        const resultMessage = new Discord.MessageEmbed()
-          .setColor(randomColor().substring(1))
-          .setAuthor("Transero the Great", avatar)
-          .setTitle("Translate:")
-          .setDescription(
-            `**${ISO6391.getName(fromLanguage)}** to **${
-              language.startsWith("zh") ? "Chinese" : ISO6391.getName(language)
-            }**`
-          )
-          .addField("From:", sentence)
-          .addField("To:", translatedRes.text)
-          .addField(
-            "More Details:",
-            `[Google Translate](https://translate.google.com/?sl=${fromLanguage}&tl=${language}&text=${urlSentence}&op=translate)`
-          );
-        param.msg.channel.send(resultMessage);
-      })
-      .catch((e: any) => console.error(e));
+    transL.translateText({
+      sentence: sentence,
+      langS: language,
+      msg: param.msg,
+    });
   }
 }
 
@@ -89,7 +67,7 @@ export function initializeMultipleTranslate(param: funcParams) {
     }
     transL.translateMultipleText({
       sentence: sentence,
-      lang: language,
+      langM: language,
       msg: param.msg,
     });
   }

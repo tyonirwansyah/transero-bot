@@ -52,14 +52,38 @@ export function parseMultiLanguages(lang: string[], amountLang: number) {
 
 interface translateParams {
   sentence: string;
-  lang: string[];
+  langS?: string;
+  langM?: string[];
   msg: Discord.Message;
 }
 
-export async function translateText(sentence: string, lang: string) {
+export async function translateText(p: translateParams) {
   try {
-    const translateSentence = await translate(sentence, { to: lang });
-    return await translateSentence;
+    const trRes = await translate(p.sentence, {
+      to: p.langS.toString(),
+    });
+    const urlSentence = trRes.raw[1][4][0]
+      .replace(/\s/g, "%20")
+      .replace(/\s+/g, "")
+      .trim();
+    const fromLang = ISO6391.getName(trRes.from.language.iso);
+    const toLang = ISO6391.getName(trRes.raw[1][1]);
+    const fromLangRaw = trRes.from.language.iso;
+    const toLangRaw = trRes.raw[1][1];
+    const link = `[✦](https://translate.google.com/?sl=${fromLangRaw}&tl=${toLangRaw}&text=${urlSentence}&op=translate)`;
+    const resultMessage = new Discord.MessageEmbed()
+      .setColor(randomColor().substring(1))
+      .setAuthor("Transero the Super Translator", avatar)
+      .setFooter("Click ✦ for more details, Thanks for translating.")
+      .addField(
+        `**${fromLang}** to **${
+          trRes.raw[1][1].startsWith("zh") ? "Chinese" : toLang
+        }:**`,
+        `${link} ${trRes.text.replace(/^./, trRes.text[0].toUpperCase())} ${
+          trRes.pronunciation != null ? `\n${trRes.pronunciation}` : ""
+        }`
+      );
+    p.msg.channel.send(resultMessage);
   } catch (e) {
     return console.error(e);
   }
@@ -68,7 +92,7 @@ export async function translateText(sentence: string, lang: string) {
 export function translateMultipleText(p: translateParams) {
   let translationRes: Array<ITranslateResponse> = [];
   let count: number = 0;
-  p.lang.forEach(async (l, _v, a) => {
+  p.langM.forEach(async (l, _v, a) => {
     try {
       const translateSentence = await translate(p.sentence, { to: l });
       translationRes.push(translateSentence);

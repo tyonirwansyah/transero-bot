@@ -89,11 +89,27 @@ function parseMultiLanguages(lang, amountLang) {
     return langs;
 }
 exports.parseMultiLanguages = parseMultiLanguages;
-function translateText(sentence, lang) {
+function translateText(p) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const translateSentence = yield google_translate_api_1.default(sentence, { to: lang });
-            return yield translateSentence;
+            const trRes = yield google_translate_api_1.default(p.sentence, {
+                to: p.langS.toString(),
+            });
+            const urlSentence = trRes.raw[1][4][0]
+                .replace(/\s/g, "%20")
+                .replace(/\s+/g, "")
+                .trim();
+            const fromLang = iso_639_1_1.default.getName(trRes.from.language.iso);
+            const toLang = iso_639_1_1.default.getName(trRes.raw[1][1]);
+            const fromLangRaw = trRes.from.language.iso;
+            const toLangRaw = trRes.raw[1][1];
+            const link = `[✦](https://translate.google.com/?sl=${fromLangRaw}&tl=${toLangRaw}&text=${urlSentence}&op=translate)`;
+            const resultMessage = new Discord.MessageEmbed()
+                .setColor(randomcolor_1.default().substring(1))
+                .setAuthor("Transero the Super Translator", avatar)
+                .setFooter("Click ✦ for more details, Thanks for translating.")
+                .addField(`**${fromLang}** to **${trRes.raw[1][1].startsWith("zh") ? "Chinese" : toLang}:**`, `${link} ${trRes.text.replace(/^./, trRes.text[0].toUpperCase())} ${trRes.pronunciation != null ? `\n${trRes.pronunciation}` : ""}`);
+            p.msg.channel.send(resultMessage);
         }
         catch (e) {
             return console.error(e);
@@ -104,7 +120,7 @@ exports.translateText = translateText;
 function translateMultipleText(p) {
     let translationRes = [];
     let count = 0;
-    p.lang.forEach((l, _v, a) => __awaiter(this, void 0, void 0, function* () {
+    p.langM.forEach((l, _v, a) => __awaiter(this, void 0, void 0, function* () {
         try {
             const translateSentence = yield google_translate_api_1.default(p.sentence, { to: l });
             translationRes.push(translateSentence);
