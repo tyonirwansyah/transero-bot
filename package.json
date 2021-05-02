@@ -2,7 +2,7 @@
   "name": "transero",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "watch": "tsc -w",
     "start": "node dist/index.js",
@@ -20,14 +20,12 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@lazy-cjk/japanese": "^1.2.12",
     "@vitalets/google-translate-api": "^7.0.0",
     "country-quiz": "^0.5.1",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "iso-3166-1": "^2.0.1",
     "iso-639-1": "^2.1.9",
-    "randomcolor": "^0.6.2",
-    "svg-png-converter": "^0.0.9"
+    "randomcolor": "^0.6.2"
   }
 }
