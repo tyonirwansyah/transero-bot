@@ -34,6 +34,12 @@ let CountrytoCity = country.newQuiz("country-to-capital", 1);
 let CitytoCountry = country.newQuiz("capital-to-country", 1);
 // Is Playing?
 let isPlaying = true;
+var gameMode;
+(function (gameMode) {
+    gameMode[gameMode["FLAGTOCOUNTRY"] = 0] = "FLAGTOCOUNTRY";
+    gameMode[gameMode["COUNTRYTOCITY"] = 1] = "COUNTRYTOCITY";
+    gameMode[gameMode["CITYTOCOUNTRY"] = 2] = "CITYTOCOUNTRY";
+})(gameMode || (gameMode = {}));
 // Flag to Country
 function countryFlagQuiz(p) {
     let notAnswered = true;
@@ -42,7 +48,7 @@ function countryFlagQuiz(p) {
     quizQuestionEmbed({
         quiz: quiz,
         quizQ: quiz.questions[0],
-        typeQuiz: 0,
+        typeQuiz: gameMode.FLAGTOCOUNTRY,
         msg: p.msg,
         imgUrl: quiz.questions[0].question,
     });
@@ -58,7 +64,7 @@ function countryFlagQuiz(p) {
                 client: p.client,
                 answerKey: answerKey,
                 emoji: emojiName,
-                gameMode: 0,
+                gameMode: gameMode.FLAGTOCOUNTRY,
             });
             notAnswered = false;
             p.client.removeListener("messageReactionAdd", listener);
@@ -75,7 +81,7 @@ function capitalCityQuiz(p) {
     quizQuestionEmbed({
         quiz: quiz,
         quizQ: quiz.questions[0],
-        typeQuiz: 1,
+        typeQuiz: gameMode.COUNTRYTOCITY,
         msg: p.msg,
         imgUrl: "",
     });
@@ -91,7 +97,7 @@ function capitalCityQuiz(p) {
                 client: p.client,
                 answerKey: answerKey,
                 emoji: emojiName,
-                gameMode: 1,
+                gameMode: gameMode.COUNTRYTOCITY,
             });
             notAnswered = false;
             p.client.removeListener("messageReactionAdd", listener);
@@ -108,7 +114,7 @@ function countryCapitalQuiz(p) {
     quizQuestionEmbed({
         quiz: quiz,
         quizQ: quiz.questions[0],
-        typeQuiz: 2,
+        typeQuiz: gameMode.CITYTOCOUNTRY,
         msg: p.msg,
         imgUrl: "",
     });
@@ -124,7 +130,7 @@ function countryCapitalQuiz(p) {
                 client: p.client,
                 answerKey: answerKey,
                 emoji: emojiName,
-                gameMode: 2,
+                gameMode: gameMode.CITYTOCOUNTRY,
             });
             notAnswered = false;
             p.client.removeListener("messageReactionAdd", listener);
@@ -227,11 +233,11 @@ function answerEmbed(p) {
 function continueQuiz(p) {
     switch (p.emoji) {
         case "⏭":
-            if (p.gameMode === 0)
+            if (p.gameMode === gameMode.FLAGTOCOUNTRY)
                 return countryFlagQuiz({ client: p.client, msg: p.msg });
-            if (p.gameMode === 1)
+            if (p.gameMode === gameMode.COUNTRYTOCITY)
                 return capitalCityQuiz({ client: p.client, msg: p.msg });
-            if (p.gameMode === 2)
+            if (p.gameMode === gameMode.CITYTOCOUNTRY)
                 return countryCapitalQuiz({ client: p.client, msg: p.msg });
             break;
         case "🚫":
@@ -245,7 +251,7 @@ function quizQuestionEmbed(p) {
         .setAuthor("Transero the Quiz Whizz", avatar)
         .setTitle(`Question:`);
     // 0 == Flag Country Flag Quiz
-    if (p.typeQuiz === 0) {
+    if (p.typeQuiz === gameMode.FLAGTOCOUNTRY) {
         const option = p.quizQ.options;
         const url = flagToPng(p.imgUrl);
         return p.msg.channel
@@ -265,7 +271,7 @@ function quizQuestionEmbed(p) {
             .catch((e) => console.error(e));
     }
     // 1 == Capital City Quiz
-    if (p.typeQuiz === 1) {
+    if (p.typeQuiz === gameMode.COUNTRYTOCITY) {
         const option = p.quizQ.options;
         return p.msg.channel
             .send(embed
@@ -283,7 +289,7 @@ function quizQuestionEmbed(p) {
             .catch((e) => console.error(e));
     }
     // 2 == Country Quiz
-    if (p.typeQuiz === 2) {
+    if (p.typeQuiz === gameMode.CITYTOCOUNTRY) {
         const option = p.quizQ.options;
         return p.msg.channel
             .send(embed

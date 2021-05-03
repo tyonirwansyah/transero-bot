@@ -19,6 +19,14 @@ interface quizParams {
   client: Discord.Client;
 }
 
+enum gameMode {
+  FLAGTOCOUNTRY,
+  COUNTRYTOCITY,
+  CITYTOCOUNTRY,
+}
+
+type UserOrPartialUser = Discord.User | Discord.PartialUser;
+
 // Flag to Country
 export function countryFlagQuiz(p: quizParams) {
   let notAnswered: boolean = true;
@@ -27,13 +35,13 @@ export function countryFlagQuiz(p: quizParams) {
   quizQuestionEmbed({
     quiz: quiz,
     quizQ: quiz.questions[0],
-    typeQuiz: 0,
+    typeQuiz: gameMode.FLAGTOCOUNTRY,
     msg: p.msg,
     imgUrl: quiz.questions[0].question,
   });
   const listener = (
     reaction: Discord.MessageReaction,
-    user: Discord.User | Discord.PartialUser
+    user: UserOrPartialUser
   ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
@@ -45,7 +53,7 @@ export function countryFlagQuiz(p: quizParams) {
         client: p.client,
         answerKey: answerKey,
         emoji: emojiName,
-        gameMode: 0,
+        gameMode: gameMode.FLAGTOCOUNTRY,
       });
       notAnswered = false;
       p.client.removeListener("messageReactionAdd", listener);
@@ -62,13 +70,13 @@ export function capitalCityQuiz(p: quizParams) {
   quizQuestionEmbed({
     quiz: quiz,
     quizQ: quiz.questions[0],
-    typeQuiz: 1,
+    typeQuiz: gameMode.COUNTRYTOCITY,
     msg: p.msg,
     imgUrl: "",
   });
   const listener = (
     reaction: Discord.MessageReaction,
-    user: Discord.User | Discord.PartialUser
+    user: UserOrPartialUser
   ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
@@ -80,7 +88,7 @@ export function capitalCityQuiz(p: quizParams) {
         client: p.client,
         answerKey: answerKey,
         emoji: emojiName,
-        gameMode: 1,
+        gameMode: gameMode.COUNTRYTOCITY,
       });
       notAnswered = false;
       p.client.removeListener("messageReactionAdd", listener);
@@ -97,13 +105,13 @@ export function countryCapitalQuiz(p: quizParams) {
   quizQuestionEmbed({
     quiz: quiz,
     quizQ: quiz.questions[0],
-    typeQuiz: 2,
+    typeQuiz: gameMode.CITYTOCOUNTRY,
     msg: p.msg,
     imgUrl: "",
   });
   const listener = (
     reaction: Discord.MessageReaction,
-    user: Discord.User | Discord.PartialUser
+    user: UserOrPartialUser
   ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
@@ -115,7 +123,7 @@ export function countryCapitalQuiz(p: quizParams) {
         client: p.client,
         answerKey: answerKey,
         emoji: emojiName,
-        gameMode: 2,
+        gameMode: gameMode.CITYTOCOUNTRY,
       });
       notAnswered = false;
       p.client.removeListener("messageReactionAdd", listener);
@@ -187,7 +195,7 @@ function answerEmbed(p: answerEmbedParams) {
         message.react("⏭");
         const listener = (
           reaction: Discord.MessageReaction,
-          user: Discord.User | Discord.PartialUser
+          user: UserOrPartialUser
         ) => {
           if (user.bot) return;
           const emojiName = reaction.emoji.name;
@@ -251,11 +259,11 @@ interface continueQuizParams {
 function continueQuiz(p: continueQuizParams) {
   switch (p.emoji) {
     case "⏭":
-      if (p.gameMode === 0)
+      if (p.gameMode === gameMode.FLAGTOCOUNTRY)
         return countryFlagQuiz({ client: p.client, msg: p.msg });
-      if (p.gameMode === 1)
+      if (p.gameMode === gameMode.COUNTRYTOCITY)
         return capitalCityQuiz({ client: p.client, msg: p.msg });
-      if (p.gameMode === 2)
+      if (p.gameMode === gameMode.CITYTOCOUNTRY)
         return countryCapitalQuiz({ client: p.client, msg: p.msg });
       break;
     case "🚫":
@@ -277,7 +285,7 @@ function quizQuestionEmbed(p: quizQuestionParams) {
     .setAuthor("Transero the Quiz Whizz", avatar)
     .setTitle(`Question:`);
   // 0 == Flag Country Flag Quiz
-  if (p.typeQuiz === 0) {
+  if (p.typeQuiz === gameMode.FLAGTOCOUNTRY) {
     const option = p.quizQ.options;
     const url = flagToPng(p.imgUrl);
     return p.msg.channel
@@ -302,7 +310,7 @@ function quizQuestionEmbed(p: quizQuestionParams) {
       .catch((e) => console.error(e));
   }
   // 1 == Capital City Quiz
-  if (p.typeQuiz === 1) {
+  if (p.typeQuiz === gameMode.COUNTRYTOCITY) {
     const option = p.quizQ.options;
     return p.msg.channel
       .send(
@@ -327,7 +335,7 @@ function quizQuestionEmbed(p: quizQuestionParams) {
       .catch((e) => console.error(e));
   }
   // 2 == Country Quiz
-  if (p.typeQuiz === 2) {
+  if (p.typeQuiz === gameMode.CITYTOCOUNTRY) {
     const option = p.quizQ.options;
     return p.msg.channel
       .send(
