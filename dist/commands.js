@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.disableHoldingCommand = exports.initializeQuiz = exports.initializeMultipleTranslate = exports.initializeTranslator = void 0;
+exports.initializeQuiz = exports.initializeMultipleTranslate = exports.initializeTranslator = void 0;
 const Discord = __importStar(require("discord.js"));
 const transL = __importStar(require("./commandUtils/translate"));
 const quizL = __importStar(require("./commandUtils/quiz"));
@@ -148,10 +148,6 @@ function initializeQuiz(param, client) {
     }
 }
 exports.initializeQuiz = initializeQuiz;
-function disableHoldingCommand(input) {
-    holdingQuizCommand = input;
-}
-exports.disableHoldingCommand = disableHoldingCommand;
 function pickQuizEmbed(message) {
     return new Discord.MessageEmbed()
         .setColor("674771")

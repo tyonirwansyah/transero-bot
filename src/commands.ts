@@ -140,10 +140,6 @@ export function initializeQuiz(param: funcParams, client: Discord.Client) {
   }
 }
 
-export function disableHoldingCommand(input: boolean) {
-  holdingQuizCommand = input;
-}
-
 function pickQuizEmbed(message: string) {
   return new Discord.MessageEmbed()
     .setColor("674771")
