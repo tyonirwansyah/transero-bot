@@ -11,10 +11,10 @@ const PREFIX = "$";
 
 client.on("ready", () => {
   console.log("Bot Active");
-  client!.user!.setActivity("$trhelp");
+  client?.user?.setActivity("$trhelp");
 });
 
-client.on("message", (msg: any) => {
+client.on("message", (msg: Discord.Message) => {
   if (msg.author.bot) return null;
   if (msg.content.startsWith(PREFIX)) {
     const [command, ...argm] = msg.content

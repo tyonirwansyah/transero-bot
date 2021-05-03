@@ -5,18 +5,18 @@ import randomColor from "randomcolor";
 
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
 
-export function parseSentence(words: string[] | string, parseNum: number = 1) {
-  if (words === null) return;
-  if (words === undefined) return;
-  if (words[1] === "") return;
-  let sentence: string = "";
+export function parseSentence(words: string[] | string, parseNum = 1): string {
+  if (words === null) return "";
+  if (words === undefined) return "";
+  if (words[1] === "") return "";
+  let sentence = "";
   for (let i = parseNum; i < words.length; i++) {
     sentence += words[i] + " ";
   }
   return sentence;
 }
 
-export function parseLanguage(lang: string) {
+export function parseLanguage(lang: string): string {
   // Chinese => Traditional or Simplified
   if (lang.startsWith("zh")) {
     let words;
@@ -40,19 +40,22 @@ export function parseLanguage(lang: string) {
   }
 }
 
-export function parseMultiLanguages(lang: string[], amountLang: number) {
-  let langs: string[] | undefined = [];
+export function parseMultiLanguages(
+  lang: string[],
+  amountLang: number
+): string[] {
+  let langs: string[] = [];
   for (let i = 1; i < amountLang + 1; i++) {
-    langs.push(lang[i]);
+    langs.push(lang?.[i] as string);
   }
   langs.forEach((lang, val) => {
     const languageConvert = ISO6391.getName(lang).toLowerCase();
     if (lang.length == 2 && languages.has(languageConvert)) {
-      langs![val] = languages.get(languageConvert);
+      return (langs[val] = languages.get(languageConvert));
     } else if (languages.has(lang)) {
-      langs![val] = languages.get(lang);
+      return (langs[val] = languages.get(lang));
     } else {
-      langs = undefined;
+      return (langs = [""]);
     }
   });
   return langs;
@@ -65,11 +68,11 @@ interface translateParams {
   msg: Discord.Message;
 }
 
-export async function translateText(p: translateParams) {
+export async function translateText(p: translateParams): Promise<void> {
   if (p.sentence === undefined) return;
   try {
     const trRes = await translate(p.sentence, {
-      to: p.langS!,
+      to: p.langS,
     });
     const urlSentence = trRes.raw[1][4][0]
       .replace(/\s/g, "%20")
@@ -94,21 +97,21 @@ export async function translateText(p: translateParams) {
       );
     p.msg.channel.send(resultMessage);
   } catch (e) {
-    return console.error(e);
+    throw new Error(e);
   }
 }
 
-export function translateMultipleText(p: translateParams) {
-  let translationRes: Array<ITranslateResponse> = [];
-  let count: number = 0;
-  p.langM!.forEach(async (l, _v, a) => {
+export function translateMultipleText(p: translateParams): void {
+  const translationRes: Array<ITranslateResponse> = [];
+  let count = 0;
+  p.langM?.forEach(async (l, _v, a) => {
     if (p.sentence === undefined) return;
     try {
       const translateSentence = await translate(p.sentence, { to: l });
       translationRes.push(translateSentence);
       count++;
     } catch (e) {
-      console.error(e);
+      throw new Error(e);
     }
     if (count === a.length) {
       translateMultipleTextEmbed({ translations: translationRes, msg: p.msg });
@@ -122,7 +125,7 @@ interface translateMultipleTextEmbedParams {
 }
 
 function translateMultipleTextEmbed(p: translateMultipleTextEmbedParams) {
-  let embed = new Discord.MessageEmbed()
+  const embed = new Discord.MessageEmbed()
     .setTitle("Translations:")
     .setAuthor("Transero the Super Translator", avatar)
     .setFooter("Click ✦ for more details, Thanks for translating.")
@@ -146,7 +149,7 @@ function translateMultipleTextEmbed(p: translateMultipleTextEmbedParams) {
   });
 }
 
-let languages = new Map();
+const languages = new Map();
 languages.set("afrikaans", "af");
 languages.set("albanian", "sq");
 languages.set("amharic", "am");

@@ -5,7 +5,6 @@ import randomColor from "randomcolor";
 
 // For Message Embed
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
-let holdingQuizCommand: boolean = false;
 
 // Param Interface
 interface funcParams {
@@ -15,6 +14,7 @@ interface funcParams {
 }
 
 // Translate Command
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function initializeTranslator(param: funcParams) {
   if (param.command === "tr") {
     if (param.argm.length <= 0) {
@@ -38,6 +38,7 @@ export function initializeTranslator(param: funcParams) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function initializeMultipleTranslate(param: funcParams) {
   if (param.command === "trm") {
     if (isNaN(parseInt(param.argm[0]))) {
@@ -50,7 +51,7 @@ export function initializeMultipleTranslate(param: funcParams) {
     const amountLanguages = parseInt(param.argm[0]);
     const sentence = transL.parseSentence(param.argm, amountLanguages + 1);
     const language = transL.parseMultiLanguages(param.argm, amountLanguages);
-    if (language === undefined) {
+    if (language.includes("")) {
       return param.msg.reply(
         "error: [Languages] one of the language doesn't exist or not supported"
       );
@@ -67,9 +68,11 @@ export function initializeMultipleTranslate(param: funcParams) {
 }
 
 // Quiz Command
-export function initializeQuiz(param: funcParams, client: Discord.Client) {
+export function initializeQuiz(
+  param: funcParams,
+  client: Discord.Client
+): void {
   // Variable
-  let notAnswered: boolean = true;
   let quizMsgId: string;
   //
   if (param.command === "trquiz") {
@@ -108,35 +111,27 @@ export function initializeQuiz(param: funcParams, client: Discord.Client) {
     ) => {
       if (user.bot) return;
       const emojiName = reaction.emoji.name;
-      if (reaction.message.id === quizMsgId && notAnswered) {
+      if (reaction.message.id === quizMsgId) {
         switch (emojiName) {
           case "📠":
             param.msg.channel.send(pickQuizEmbed("Picked Country Flag Quiz."));
             quizL.countryFlagQuiz({ msg: param.msg, client: client });
-            notAnswered = false;
-            holdingQuizCommand = true;
             param.msg.client.removeListener("messageReactionAdd", listener);
             break;
           case "🗽":
             param.msg.channel.send(pickQuizEmbed("Picked Capital City Quiz."));
             quizL.capitalCityQuiz({ msg: param.msg, client: client });
-            notAnswered = false;
-            holdingQuizCommand = true;
             param.msg.client.removeListener("messageReactionAdd", listener);
             break;
           case "👨‍🦯":
             param.msg.channel.send(pickQuizEmbed("Picked Country Quiz."));
             quizL.countryCapitalQuiz({ msg: param.msg, client: client });
-            notAnswered = false;
-            holdingQuizCommand = true;
             param.msg.client.removeListener("messageReactionAdd", listener);
             break;
         }
       }
     };
     param.msg.client.on("messageReactionAdd", listener);
-  } else if (param.command === "trquiz" && holdingQuizCommand) {
-    return param.msg.channel.send(pickQuizEmbed("Game currently running."));
   }
 }
 

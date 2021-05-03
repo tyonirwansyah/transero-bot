@@ -10,9 +10,6 @@ let FlagtoCountry = country.newQuiz("flag-to-country", 1);
 let CountrytoCity = country.newQuiz("country-to-capital", 1);
 let CitytoCountry = country.newQuiz("capital-to-country", 1);
 
-// Is Playing?
-let isPlaying: boolean = true;
-
 // Param Interface
 interface quizParams {
   msg: Discord.Message;
@@ -28,8 +25,7 @@ enum gameMode {
 type UserOrPartialUser = Discord.User | Discord.PartialUser;
 
 // Flag to Country
-export function countryFlagQuiz(p: quizParams) {
-  let notAnswered: boolean = true;
+export function countryFlagQuiz(p: quizParams): void {
   FlagtoCountry = country.newQuiz("flag-to-country");
   const quiz = FlagtoCountry;
   quizQuestionEmbed({
@@ -45,8 +41,8 @@ export function countryFlagQuiz(p: quizParams) {
   ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
-    const fetchMessage = p!.msg!.channel!.lastMessage!.id;
-    if (reaction.message.id === fetchMessage && notAnswered) {
+    const fetchMessage = p?.msg?.channel?.lastMessage?.id;
+    if (reaction.message.id === fetchMessage) {
       const answerKey = quiz.questions[0];
       checkAnswers({
         msg: p.msg,
@@ -55,7 +51,6 @@ export function countryFlagQuiz(p: quizParams) {
         emoji: emojiName,
         gameMode: gameMode.FLAGTOCOUNTRY,
       });
-      notAnswered = false;
       p.client.removeListener("messageReactionAdd", listener);
     }
   };
@@ -63,8 +58,7 @@ export function countryFlagQuiz(p: quizParams) {
 }
 
 // Country to City
-export function capitalCityQuiz(p: quizParams) {
-  let notAnswered: boolean = true;
+export function capitalCityQuiz(p: quizParams): void {
   CountrytoCity = country.newQuiz("country-to-capital");
   const quiz = CountrytoCity;
   quizQuestionEmbed({
@@ -80,8 +74,8 @@ export function capitalCityQuiz(p: quizParams) {
   ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
-    const fetchMessage = p.msg!.channel!.lastMessage!.id;
-    if (reaction.message.id === fetchMessage && notAnswered) {
+    const fetchMessage = p.msg?.channel?.lastMessage?.id;
+    if (reaction.message.id === fetchMessage) {
       const answerKey = quiz.questions[0];
       checkAnswers({
         msg: p.msg,
@@ -90,7 +84,6 @@ export function capitalCityQuiz(p: quizParams) {
         emoji: emojiName,
         gameMode: gameMode.COUNTRYTOCITY,
       });
-      notAnswered = false;
       p.client.removeListener("messageReactionAdd", listener);
     }
   };
@@ -98,8 +91,7 @@ export function capitalCityQuiz(p: quizParams) {
 }
 
 // City to Country
-export function countryCapitalQuiz(p: quizParams) {
-  let notAnswered: boolean = true;
+export function countryCapitalQuiz(p: quizParams): void {
   CitytoCountry = country.newQuiz("capital-to-country");
   const quiz = CitytoCountry;
   quizQuestionEmbed({
@@ -115,8 +107,8 @@ export function countryCapitalQuiz(p: quizParams) {
   ) => {
     if (user.bot) return;
     const emojiName = reaction.emoji.name;
-    const fetchMessage = p.msg!.channel!.lastMessage!.id;
-    if (reaction.message.id === fetchMessage && notAnswered) {
+    const fetchMessage = p.msg?.channel?.lastMessage?.id;
+    if (reaction.message.id === fetchMessage) {
       const answerKey = quiz.questions[0];
       checkAnswers({
         msg: p.msg,
@@ -125,7 +117,6 @@ export function countryCapitalQuiz(p: quizParams) {
         emoji: emojiName,
         gameMode: gameMode.CITYTOCOUNTRY,
       });
-      notAnswered = false;
       p.client.removeListener("messageReactionAdd", listener);
     }
   };
@@ -272,16 +263,15 @@ function continueQuiz(p: continueQuizParams) {
 }
 
 interface quizQuestionParams {
-  quizQ: any;
+  quizQ: string[];
   typeQuiz: number;
   msg: Discord.Message;
   imgUrl: string;
-  quiz?: any;
+  quiz?: string[];
 }
 
 function quizQuestionEmbed(p: quizQuestionParams) {
-  if (!isPlaying) return;
-  let embed = new Discord.MessageEmbed()
+  const embed = new Discord.MessageEmbed()
     .setAuthor("Transero the Quiz Whizz", avatar)
     .setTitle(`Question:`);
   // 0 == Flag Country Flag Quiz
@@ -370,7 +360,7 @@ interface checkAnswersParams {
 }
 
 function checkAnswers(p: checkAnswersParams) {
-  const { options, answer }: any = p.answerKey;
+  const { options, answer }: string[] = p.answerKey;
   switch (p.emoji) {
     case "1️⃣":
       verifyAnswer({

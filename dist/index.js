@@ -31,8 +31,9 @@ const client = new Discord.Client({
 });
 const PREFIX = "$";
 client.on("ready", () => {
+    var _a;
     console.log("Bot Active");
-    client.user.setActivity("$trhelp");
+    (_a = client === null || client === void 0 ? void 0 : client.user) === null || _a === void 0 ? void 0 : _a.setActivity("$trhelp");
 });
 client.on("message", (msg) => {
     if (msg.author.bot)

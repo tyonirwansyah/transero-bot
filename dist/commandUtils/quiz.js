@@ -32,8 +32,6 @@ const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4
 let FlagtoCountry = country.newQuiz("flag-to-country", 1);
 let CountrytoCity = country.newQuiz("country-to-capital", 1);
 let CitytoCountry = country.newQuiz("capital-to-country", 1);
-// Is Playing?
-let isPlaying = true;
 var gameMode;
 (function (gameMode) {
     gameMode[gameMode["FLAGTOCOUNTRY"] = 0] = "FLAGTOCOUNTRY";
@@ -42,7 +40,6 @@ var gameMode;
 })(gameMode || (gameMode = {}));
 // Flag to Country
 function countryFlagQuiz(p) {
-    let notAnswered = true;
     FlagtoCountry = country.newQuiz("flag-to-country");
     const quiz = FlagtoCountry;
     quizQuestionEmbed({
@@ -53,11 +50,12 @@ function countryFlagQuiz(p) {
         imgUrl: quiz.questions[0].question,
     });
     const listener = (reaction, user) => {
+        var _a, _b, _c;
         if (user.bot)
             return;
         const emojiName = reaction.emoji.name;
-        const fetchMessage = p.msg.channel.lastMessage.id;
-        if (reaction.message.id === fetchMessage && notAnswered) {
+        const fetchMessage = (_c = (_b = (_a = p === null || p === void 0 ? void 0 : p.msg) === null || _a === void 0 ? void 0 : _a.channel) === null || _b === void 0 ? void 0 : _b.lastMessage) === null || _c === void 0 ? void 0 : _c.id;
+        if (reaction.message.id === fetchMessage) {
             const answerKey = quiz.questions[0];
             checkAnswers({
                 msg: p.msg,
@@ -66,7 +64,6 @@ function countryFlagQuiz(p) {
                 emoji: emojiName,
                 gameMode: gameMode.FLAGTOCOUNTRY,
             });
-            notAnswered = false;
             p.client.removeListener("messageReactionAdd", listener);
         }
     };
@@ -75,7 +72,6 @@ function countryFlagQuiz(p) {
 exports.countryFlagQuiz = countryFlagQuiz;
 // Country to City
 function capitalCityQuiz(p) {
-    let notAnswered = true;
     CountrytoCity = country.newQuiz("country-to-capital");
     const quiz = CountrytoCity;
     quizQuestionEmbed({
@@ -86,11 +82,12 @@ function capitalCityQuiz(p) {
         imgUrl: "",
     });
     const listener = (reaction, user) => {
+        var _a, _b, _c;
         if (user.bot)
             return;
         const emojiName = reaction.emoji.name;
-        const fetchMessage = p.msg.channel.lastMessage.id;
-        if (reaction.message.id === fetchMessage && notAnswered) {
+        const fetchMessage = (_c = (_b = (_a = p.msg) === null || _a === void 0 ? void 0 : _a.channel) === null || _b === void 0 ? void 0 : _b.lastMessage) === null || _c === void 0 ? void 0 : _c.id;
+        if (reaction.message.id === fetchMessage) {
             const answerKey = quiz.questions[0];
             checkAnswers({
                 msg: p.msg,
@@ -99,7 +96,6 @@ function capitalCityQuiz(p) {
                 emoji: emojiName,
                 gameMode: gameMode.COUNTRYTOCITY,
             });
-            notAnswered = false;
             p.client.removeListener("messageReactionAdd", listener);
         }
     };
@@ -108,7 +104,6 @@ function capitalCityQuiz(p) {
 exports.capitalCityQuiz = capitalCityQuiz;
 // City to Country
 function countryCapitalQuiz(p) {
-    let notAnswered = true;
     CitytoCountry = country.newQuiz("capital-to-country");
     const quiz = CitytoCountry;
     quizQuestionEmbed({
@@ -119,11 +114,12 @@ function countryCapitalQuiz(p) {
         imgUrl: "",
     });
     const listener = (reaction, user) => {
+        var _a, _b, _c;
         if (user.bot)
             return;
         const emojiName = reaction.emoji.name;
-        const fetchMessage = p.msg.channel.lastMessage.id;
-        if (reaction.message.id === fetchMessage && notAnswered) {
+        const fetchMessage = (_c = (_b = (_a = p.msg) === null || _a === void 0 ? void 0 : _a.channel) === null || _b === void 0 ? void 0 : _b.lastMessage) === null || _c === void 0 ? void 0 : _c.id;
+        if (reaction.message.id === fetchMessage) {
             const answerKey = quiz.questions[0];
             checkAnswers({
                 msg: p.msg,
@@ -132,7 +128,6 @@ function countryCapitalQuiz(p) {
                 emoji: emojiName,
                 gameMode: gameMode.CITYTOCOUNTRY,
             });
-            notAnswered = false;
             p.client.removeListener("messageReactionAdd", listener);
         }
     };
@@ -245,9 +240,7 @@ function continueQuiz(p) {
     }
 }
 function quizQuestionEmbed(p) {
-    if (!isPlaying)
-        return;
-    let embed = new Discord.MessageEmbed()
+    const embed = new Discord.MessageEmbed()
         .setAuthor("Transero the Quiz Whizz", avatar)
         .setTitle(`Question:`);
     // 0 == Flag Country Flag Quiz

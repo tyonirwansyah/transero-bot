@@ -39,11 +39,11 @@ const randomcolor_1 = __importDefault(require("randomcolor"));
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
 function parseSentence(words, parseNum = 1) {
     if (words === null)
-        return;
+        return "";
     if (words === undefined)
-        return;
+        return "";
     if (words[1] === "")
-        return;
+        return "";
     let sentence = "";
     for (let i = parseNum; i < words.length; i++) {
         sentence += words[i] + " ";
@@ -79,18 +79,18 @@ exports.parseLanguage = parseLanguage;
 function parseMultiLanguages(lang, amountLang) {
     let langs = [];
     for (let i = 1; i < amountLang + 1; i++) {
-        langs.push(lang[i]);
+        langs.push(lang === null || lang === void 0 ? void 0 : lang[i]);
     }
     langs.forEach((lang, val) => {
         const languageConvert = iso_639_1_1.default.getName(lang).toLowerCase();
         if (lang.length == 2 && languages.has(languageConvert)) {
-            langs[val] = languages.get(languageConvert);
+            return (langs[val] = languages.get(languageConvert));
         }
         else if (languages.has(lang)) {
-            langs[val] = languages.get(lang);
+            return (langs[val] = languages.get(lang));
         }
         else {
-            langs = undefined;
+            return (langs = [""]);
         }
     });
     return langs;
@@ -121,15 +121,16 @@ function translateText(p) {
             p.msg.channel.send(resultMessage);
         }
         catch (e) {
-            return console.error(e);
+            throw new Error(e);
         }
     });
 }
 exports.translateText = translateText;
 function translateMultipleText(p) {
-    let translationRes = [];
+    var _a;
+    const translationRes = [];
     let count = 0;
-    p.langM.forEach((l, _v, a) => __awaiter(this, void 0, void 0, function* () {
+    (_a = p.langM) === null || _a === void 0 ? void 0 : _a.forEach((l, _v, a) => __awaiter(this, void 0, void 0, function* () {
         if (p.sentence === undefined)
             return;
         try {
@@ -138,7 +139,7 @@ function translateMultipleText(p) {
             count++;
         }
         catch (e) {
-            console.error(e);
+            throw new Error(e);
         }
         if (count === a.length) {
             translateMultipleTextEmbed({ translations: translationRes, msg: p.msg });
@@ -147,7 +148,7 @@ function translateMultipleText(p) {
 }
 exports.translateMultipleText = translateMultipleText;
 function translateMultipleTextEmbed(p) {
-    let embed = new Discord.MessageEmbed()
+    const embed = new Discord.MessageEmbed()
         .setTitle("Translations:")
         .setAuthor("Transero the Super Translator", avatar)
         .setFooter("Click ✦ for more details, Thanks for translating.")
@@ -165,7 +166,7 @@ function translateMultipleTextEmbed(p) {
         }
     });
 }
-let languages = new Map();
+const languages = new Map();
 languages.set("afrikaans", "af");
 languages.set("albanian", "sq");
 languages.set("amharic", "am");
