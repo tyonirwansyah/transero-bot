@@ -1,4 +1,4 @@
-<p align="center" style="font-size: 25px" >
+<p align="center" style="font-size: 25px; padding-top: 25px" >
  <img height=80 src="./img/logo.svg"/>
 </p>
 
@@ -32,8 +32,6 @@
 
 Transero is a discord bot categorized for translating languages and other language topics.
 
-&nbsp;
-
 # Contribution
 
 Transero is open to contributions, but we recommend creating an issue or replying in a comment to let us know what you are working on first that way we don't overwrite each other or have many people adding the same feature/solving the same issue.
@@ -41,8 +39,6 @@ Transero is open to contributions, but we recommend creating an issue or replyin
 **Interested in contributing?**
 
 Check our [Contributions]() for more Details
-
-&nbsp;
 
 # Status
 
@@ -59,8 +55,6 @@ Check our [Contributions]() for more Details
 # Code of Conduct
 
 Please read [Code of Conduct](https://github.com/itstyonirwansyah/transero-bot/blob/master/.github/CODE_OF_CONDUCT.md) for details on our code of conduct.
-
-&nbsp;
 
 # License
 
