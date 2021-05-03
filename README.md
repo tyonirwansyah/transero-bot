@@ -1,4 +1,4 @@
-<p align="center" style="font-size: 25px; padding-top: 38px" >
+<p align="center" style="font-size: 25px; padding-top: 45px" >
  <img height=80 src="./img/logo.svg"/>
 </p>
 
