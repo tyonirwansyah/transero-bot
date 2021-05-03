@@ -49,25 +49,12 @@ function countryFlagQuiz(p) {
         msg: p.msg,
         imgUrl: quiz.questions[0].question,
     });
-    const listener = (reaction, user) => {
-        var _a, _b, _c;
-        if (user.bot)
-            return;
-        const emojiName = reaction.emoji.name;
-        const fetchMessage = (_c = (_b = (_a = p === null || p === void 0 ? void 0 : p.msg) === null || _a === void 0 ? void 0 : _a.channel) === null || _b === void 0 ? void 0 : _b.lastMessage) === null || _c === void 0 ? void 0 : _c.id;
-        if (reaction.message.id === fetchMessage) {
-            const answerKey = quiz.questions[0];
-            checkAnswers({
-                msg: p.msg,
-                client: p.client,
-                answerKey: answerKey,
-                emoji: emojiName,
-                gameMode: gameMode.FLAGTOCOUNTRY,
-            });
-            p.client.removeListener("messageReactionAdd", listener);
-        }
-    };
-    p.client.on("messageReactionAdd", listener);
+    listenAnswers({
+        msg: p.msg,
+        client: p.client,
+        quiz: quiz,
+        gameMode: gameMode.FLAGTOCOUNTRY,
+    });
 }
 exports.countryFlagQuiz = countryFlagQuiz;
 // Country to City
@@ -81,25 +68,12 @@ function capitalCityQuiz(p) {
         msg: p.msg,
         imgUrl: "",
     });
-    const listener = (reaction, user) => {
-        var _a, _b, _c;
-        if (user.bot)
-            return;
-        const emojiName = reaction.emoji.name;
-        const fetchMessage = (_c = (_b = (_a = p.msg) === null || _a === void 0 ? void 0 : _a.channel) === null || _b === void 0 ? void 0 : _b.lastMessage) === null || _c === void 0 ? void 0 : _c.id;
-        if (reaction.message.id === fetchMessage) {
-            const answerKey = quiz.questions[0];
-            checkAnswers({
-                msg: p.msg,
-                client: p.client,
-                answerKey: answerKey,
-                emoji: emojiName,
-                gameMode: gameMode.COUNTRYTOCITY,
-            });
-            p.client.removeListener("messageReactionAdd", listener);
-        }
-    };
-    p.client.on("messageReactionAdd", listener);
+    listenAnswers({
+        msg: p.msg,
+        client: p.client,
+        quiz: quiz,
+        gameMode: gameMode.COUNTRYTOCITY,
+    });
 }
 exports.capitalCityQuiz = capitalCityQuiz;
 // City to Country
@@ -113,6 +87,15 @@ function countryCapitalQuiz(p) {
         msg: p.msg,
         imgUrl: "",
     });
+    listenAnswers({
+        msg: p.msg,
+        client: p.client,
+        quiz: quiz,
+        gameMode: gameMode.CITYTOCOUNTRY,
+    });
+}
+exports.countryCapitalQuiz = countryCapitalQuiz;
+function listenAnswers(p) {
     const listener = (reaction, user) => {
         var _a, _b, _c;
         if (user.bot)
@@ -120,21 +103,19 @@ function countryCapitalQuiz(p) {
         const emojiName = reaction.emoji.name;
         const fetchMessage = (_c = (_b = (_a = p.msg) === null || _a === void 0 ? void 0 : _a.channel) === null || _b === void 0 ? void 0 : _b.lastMessage) === null || _c === void 0 ? void 0 : _c.id;
         if (reaction.message.id === fetchMessage) {
-            const answerKey = quiz.questions[0];
+            const answerKey = p.quiz.questions[0];
             checkAnswers({
                 msg: p.msg,
                 client: p.client,
                 answerKey: answerKey,
                 emoji: emojiName,
-                gameMode: gameMode.CITYTOCOUNTRY,
+                gameMode: p.gameMode,
             });
             p.client.removeListener("messageReactionAdd", listener);
         }
     };
     p.client.on("messageReactionAdd", listener);
 }
-exports.countryCapitalQuiz = countryCapitalQuiz;
-/// Local Funcssss ///
 // Convert to png
 function flagToPng(url) {
     const countryIso = url.substring(30).replace(".svg", "");
@@ -168,29 +149,11 @@ function answerEmbed(p) {
             .setColor("317B22")
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setDescription("You got the right answer.");
-        return p.msg.channel
-            .send(embed)
-            .then((message) => {
-            message.react("🚫");
-            message.react("⏭");
-            const listener = (reaction, user) => {
-                if (user.bot)
-                    return;
-                const emojiName = reaction.emoji.name;
-                if (reaction.message.id === message.id) {
-                    continueQuiz({
-                        client: p.msg.client,
-                        msg: p.msg,
-                        gameMode: p.gameMode,
-                        emoji: emojiName,
-                    });
-                    p.client.removeListener("messageReactionAdd", listener);
-                }
-            };
-            p.client.on("messageReactionAdd", listener);
-        })
-            .catch((e) => {
-            console.error(e);
+        return listenContinueAnswers({
+            msg: p.msg,
+            client: p.client,
+            embed: embed,
+            gameMode: p.gameMode,
         });
     }
     else {
@@ -199,31 +162,39 @@ function answerEmbed(p) {
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setDescription("You got the wrong answer.")
             .setFooter(`The answer is ${"**" + p.answer + "**"}`);
-        return p.msg.channel
-            .send(embed)
-            .then((message) => {
-            message.react("🚫");
-            message.react("⏭");
-            const listener = (reaction, user) => {
-                if (user.bot)
-                    return;
-                const emojiName = reaction.emoji.name;
-                if (reaction.message.id === message.id) {
-                    continueQuiz({
-                        client: p.msg.client,
-                        msg: p.msg,
-                        gameMode: p.gameMode,
-                        emoji: emojiName,
-                    });
-                    p.client.removeListener("messageReactionAdd", listener);
-                }
-            };
-            p.client.on("messageReactionAdd", listener);
-        })
-            .catch((e) => {
-            console.error(e);
+        return listenContinueAnswers({
+            msg: p.msg,
+            client: p.client,
+            embed: embed,
+            gameMode: p.gameMode,
         });
     }
+}
+function listenContinueAnswers(p) {
+    return p.msg.channel
+        .send(p.embed)
+        .then((message) => {
+        message.react("🚫");
+        message.react("⏭");
+        const listener = (reaction, user) => {
+            if (user.bot)
+                return;
+            const emojiName = reaction.emoji.name;
+            if (reaction.message.id === message.id) {
+                continueQuiz({
+                    client: p.msg.client,
+                    msg: p.msg,
+                    gameMode: p.gameMode,
+                    emoji: emojiName,
+                });
+                p.client.removeListener("messageReactionAdd", listener);
+            }
+        };
+        p.client.on("messageReactionAdd", listener);
+    })
+        .catch((e) => {
+        console.error(e);
+    });
 }
 function continueQuiz(p) {
     switch (p.emoji) {
@@ -240,68 +211,62 @@ function continueQuiz(p) {
     }
 }
 function quizQuestionEmbed(p) {
-    const embed = new Discord.MessageEmbed()
-        .setAuthor("Transero the Quiz Whizz", avatar)
-        .setTitle(`Question:`);
+    const option = p.quizQ.options;
+    const url = flagToPng(p.imgUrl);
+    const optionsText = `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`;
     // 0 == Flag Country Flag Quiz
     if (p.typeQuiz === gameMode.FLAGTOCOUNTRY) {
-        const option = p.quizQ.options;
-        const url = flagToPng(p.imgUrl);
-        return p.msg.channel
-            .send(embed
-            .setColor("1CCAD8")
-            .setDescription("What Country is this flag from?")
-            .setThumbnail(url)
-            .addField("Answers", `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`)
-            .addField("Cannot See Image?", `[Click Here to See.](${p.imgUrl})`)
-            .setFooter("React to one of the icon below!"))
-            .then((message) => {
-            message.react("1️⃣");
-            message.react("2️⃣");
-            message.react("3️⃣");
-            message.react("4️⃣");
-        })
-            .catch((e) => console.error(e));
+        return quizQuestionEmbedSend({
+            color: "1CCAD8",
+            question: "What Country is this flag from?",
+            options: optionsText,
+            msg: p.msg,
+            thumbnail: url,
+            newField: `[Click Here to See.](${p.imgUrl})`,
+        });
     }
     // 1 == Capital City Quiz
     if (p.typeQuiz === gameMode.COUNTRYTOCITY) {
-        const option = p.quizQ.options;
-        return p.msg.channel
-            .send(embed
-            .setColor("840032")
-            .setAuthor("Transero the Quiz Whizz", avatar)
-            .setDescription(`What is the capital city of **${p.quizQ.question}**?`)
-            .addField("Answers", `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`)
-            .setFooter("React to one of the icon below!"))
-            .then((message) => {
-            message.react("1️⃣");
-            message.react("2️⃣");
-            message.react("3️⃣");
-            message.react("4️⃣");
-        })
-            .catch((e) => console.error(e));
+        return quizQuestionEmbedSend({
+            color: "840032",
+            question: `What is the capital city of **${p.quizQ.question}**?`,
+            options: optionsText,
+            msg: p.msg,
+        });
     }
     // 2 == Country Quiz
     if (p.typeQuiz === gameMode.CITYTOCOUNTRY) {
-        const option = p.quizQ.options;
-        return p.msg.channel
-            .send(embed
-            .setColor("87F5FB")
-            .setAuthor("Transero the Quiz Whizz", avatar)
-            .setDescription(`What country is **${p.quizQ.question}** in?`)
-            .addField("Answers", `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`)
-            .setFooter("React to one of the icon below!"))
-            .then((message) => {
-            message.react("1️⃣");
-            message.react("2️⃣");
-            message.react("3️⃣");
-            message.react("4️⃣");
-        })
-            .catch((e) => console.error(e));
+        return quizQuestionEmbedSend({
+            color: "87F5FB",
+            question: `What country is **${p.quizQ.question}** in?`,
+            options: optionsText,
+            msg: p.msg,
+        });
     }
     else {
         return console.error("[typeQuiz] only accept number from 0-2");
     }
+}
+function quizQuestionEmbedSend(p) {
+    const embed = new Discord.MessageEmbed()
+        .setAuthor("Transero the Quiz Whizz", avatar)
+        .setTitle(`Question:`)
+        .setColor(p.color)
+        .setDescription(p.question)
+        .addField("Answers", p.options)
+        .setFooter("React to one of the icon below!");
+    if (p.thumbnail && p.newField) {
+        embed.addField("Cannot See Image?", p.newField).setThumbnail(p.thumbnail);
+    }
+    p.msg.channel
+        .send(embed)
+        .then((message) => {
+        message.react("1️⃣");
+        message.react("2️⃣");
+        message.react("3️⃣");
+        message.react("4️⃣");
+    })
+        .catch((e) => console.error(e));
 }
 function checkAnswers(p) {
     const { options, answer } = p.answerKey;
