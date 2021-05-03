@@ -26,9 +26,13 @@
 
 ---
 
+&nbsp;
+
 # About
 
 Transero is a discord bot categorized for translating languages and other language topics.
+
+&nbsp;
 
 # Contribution
 
