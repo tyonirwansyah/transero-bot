@@ -1,4 +1,4 @@
-<p align="center" style="font-size: 25px; padding-top: 35px" >
+<p align="center" style="font-size: 25px; padding-top: 38px" >
  <img height=80 src="./img/logo.svg"/>
 </p>
 
@@ -21,6 +21,9 @@
 <p align="center">
     <a href="https://github.com/itstyonirwansyah/transero-bot/commits" style="margin-right:5px" >
         <img src="https://img.shields.io/travis/com/itstyonirwansyah/transero-bot?style=for-the-badge&color=45cbb2" height="25" alt="Last-commit" title="last-commit">
+    </a>
+    <a href="https://app.codacy.com/gh/itstyonirwansyah/transero-bot/dashboard?branch=master">
+        <img src="https://img.shields.io/codacy/grade/0f9a3ddf618149cdb478a15b364021d2?style=for-the-badge&color=45cbb2" height="25" alt="code-quality-codacy" title="code-quality-codacy">
     </a>
 </p>
 
