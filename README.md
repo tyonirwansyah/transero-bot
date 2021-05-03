@@ -1,4 +1,4 @@
-<p align="center" style="font-size: 25px; padding-top: 25px" >
+<p align="center" style="font-size: 25px; padding-top: 35px" >
  <img height=80 src="./img/logo.svg"/>
 </p>
 
@@ -25,8 +25,6 @@
 </p>
 
 ---
-
-&nbsp;
 
 # About
 
