@@ -48,7 +48,6 @@ Check our [Contributions]() for more Details
 | **Linting and Refactoring** | Linting and Refactoring the Code Base | Not Progressed ⛔    |
 | **Deployment**              | Deploy / Host the Bot                 | Not Progressed ⛔    |
 
-&nbsp;
 
 # Code of Conduct
 
