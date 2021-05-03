@@ -2,12 +2,7 @@ language: node_js
 node_js:
   - lts/*
 script:
-<<<<<<< HEAD
   - npm run test
   - npm run watch
-=======
-  - npm run watch
-  - npm run test
->>>>>>> a11c02a66483a102e7be3aa8b8fa06a32cbaab1b
   - npm run start
   - npm run dev
