@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - lts/*
+script:
+  - npm run watch
+  - npm run test
+  - npm run start
+  - npm run dev
