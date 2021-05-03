@@ -36,7 +36,7 @@ Transero is open to contributions, but we recommend creating an issue or replyin
 
 **Interested in contributing?**
 
-Check our [Contributions]() for more Details
+Check our [Contributions](https://github.com/itstyonirwansyah/transero-bot/blob/master/.github/CONTRIBUTING.md) for more Details
 
 # Status
 
@@ -47,7 +47,6 @@ Check our [Contributions]() for more Details
 | **Features**                | Finished creating the whole feature   | Currently Working 🏗️ |
 | **Linting and Refactoring** | Linting and Refactoring the Code Base | Not Progressed ⛔    |
 | **Deployment**              | Deploy / Host the Bot                 | Not Progressed ⛔    |
-
 
 # Code of Conduct
 
