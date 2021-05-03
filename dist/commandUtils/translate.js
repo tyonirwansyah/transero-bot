@@ -52,16 +52,23 @@ function parseSentence(words, parseNum = 1) {
 }
 exports.parseSentence = parseSentence;
 function parseLanguage(lang) {
-    if (lang.length == 2) {
-        const languageConvert = iso_639_1_1.default.getName(lang).toLowerCase();
-        if (languages.has(languageConvert)) {
-            return languages.get(languageConvert);
+    // Chinese => Traditional or Simplified
+    if (lang.startsWith("zh")) {
+        let words;
+        const capitalize = lang.slice(3, 5) === "cn" || "tw" ? lang.slice(3, 5).toUpperCase() : "";
+        const word = lang.slice(0, 3);
+        if (capitalize === "TW" || capitalize === "CN") {
+            words = word + capitalize;
+            return words;
         }
-        else {
-            return "";
-        }
+        return "";
     }
-    if (languages.has(lang)) {
+    // Main Code
+    const languageConvert = iso_639_1_1.default.getName(lang).toLowerCase();
+    if (lang.length == 2 && languages.has(languageConvert)) {
+        return languages.get(languageConvert);
+    }
+    else if (languages.has(lang)) {
         return languages.get(lang);
     }
     else {
@@ -95,7 +102,7 @@ function translateText(p) {
             return;
         try {
             const trRes = yield google_translate_api_1.default(p.sentence, {
-                to: p.langS.toString(),
+                to: p.langS,
             });
             const urlSentence = trRes.raw[1][4][0]
                 .replace(/\s/g, "%20")

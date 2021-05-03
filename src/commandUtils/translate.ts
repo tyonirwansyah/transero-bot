@@ -17,15 +17,23 @@ export function parseSentence(words: string[] | string, parseNum: number = 1) {
 }
 
 export function parseLanguage(lang: string) {
-  if (lang.length == 2) {
-    const languageConvert = ISO6391.getName(lang).toLowerCase();
-    if (languages.has(languageConvert)) {
-      return languages.get(languageConvert);
-    } else {
-      return "";
+  // Chinese => Traditional or Simplified
+  if (lang.startsWith("zh")) {
+    let words;
+    const capitalize =
+      lang.slice(3, 5) === "cn" || "tw" ? lang.slice(3, 5).toUpperCase() : "";
+    const word = lang.slice(0, 3);
+    if (capitalize === "TW" || capitalize === "CN") {
+      words = word + capitalize;
+      return words;
     }
+    return "";
   }
-  if (languages.has(lang)) {
+  // Main Code
+  const languageConvert = ISO6391.getName(lang).toLowerCase();
+  if (lang.length == 2 && languages.has(languageConvert)) {
+    return languages.get(languageConvert);
+  } else if (languages.has(lang)) {
     return languages.get(lang);
   } else {
     return "";
@@ -61,7 +69,7 @@ export async function translateText(p: translateParams) {
   if (p.sentence === undefined) return;
   try {
     const trRes = await translate(p.sentence, {
-      to: p.langS!.toString(),
+      to: p.langS!,
     });
     const urlSentence = trRes.raw[1][4][0]
       .replace(/\s/g, "%20")
