@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
 import * as transL from "./commandUtils/translate";
 import * as quizL from "./commandUtils/quiz";
+import * as dictL from "./commandUtils/dictionary";
 import randomColor from "randomcolor";
 
 // For Message Embed
@@ -140,4 +141,24 @@ function pickQuizEmbed(message: string) {
     .setColor("674771")
     .setAuthor("Transero the Quiz Whizz", avatar)
     .setDescription(message);
+}
+
+// Dictionary Command
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function initializeDictionary(param: funcParams) {
+  if (param.command === "trd") {
+    if (param.argm.length === 0) {
+      return param.msg.reply("error: missing [language] [word]");
+    } else if (param.argm.length === 1) {
+      return param.msg.reply("error: missing [word]");
+    }
+    const language = dictL.parseLang(param.argm[0]);
+    const word = dictL.parseWord(param.argm);
+    dictL.getDefeninitionWord({
+      word: word,
+      language: language,
+      msg: param.msg,
+    });
+  }
 }

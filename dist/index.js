@@ -47,6 +47,7 @@ client.on("message", (msg) => {
         cmd.initializeTranslator({ command: command, argm: argm, msg: msg });
         cmd.initializeMultipleTranslate({ command: command, argm: argm, msg: msg });
         cmd.initializeQuiz({ command: command, argm: argm, msg: msg }, client);
+        cmd.initializeDictionary({ command: command, argm: argm, msg: msg });
     }
 });
 client.login(process.env.DISCORD_TOKEN);

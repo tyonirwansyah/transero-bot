@@ -22,10 +22,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initializeQuiz = exports.initializeMultipleTranslate = exports.initializeTranslator = void 0;
+exports.initializeDictionary = exports.initializeQuiz = exports.initializeMultipleTranslate = exports.initializeTranslator = void 0;
 const Discord = __importStar(require("discord.js"));
 const transL = __importStar(require("./commandUtils/translate"));
 const quizL = __importStar(require("./commandUtils/quiz"));
+const dictL = __importStar(require("./commandUtils/dictionary"));
 const randomcolor_1 = __importDefault(require("randomcolor"));
 // For Message Embed
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
@@ -145,4 +146,24 @@ function pickQuizEmbed(message) {
         .setAuthor("Transero the Quiz Whizz", avatar)
         .setDescription(message);
 }
+// Dictionary Command
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function initializeDictionary(param) {
+    if (param.command === "trd") {
+        if (param.argm.length === 0) {
+            return param.msg.reply("error: missing [language] [word]");
+        }
+        else if (param.argm.length === 1) {
+            return param.msg.reply("error: missing [word]");
+        }
+        const language = dictL.parseLang(param.argm[0]);
+        const word = dictL.parseWord(param.argm);
+        dictL.getDefeninitionWord({
+            word: word,
+            language: language,
+            msg: param.msg,
+        });
+    }
+}
+exports.initializeDictionary = initializeDictionary;
 //# sourceMappingURL=commands.js.map
