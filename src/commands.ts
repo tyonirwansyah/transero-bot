@@ -1,7 +1,8 @@
 import * as Discord from "discord.js";
 import * as transL from "./commandUtils/translate";
 import * as quizL from "./commandUtils/quiz/quiz";
-import * as dictL from "./commandUtils/dictionary";
+import * as dictL from "./commandUtils/dictionary/dictionary";
+import * as parseWord from "./commandUtils/dictionary/utils/parseString";
 import randomColor from "randomcolor";
 
 // For Message Embed
@@ -156,8 +157,8 @@ export function initializeDictionary(
     } else if (param.argm.length === 1) {
       return param.msg.reply("error: missing [language] or [word]");
     }
-    const language = dictL.parseLang(param.argm[0]);
-    const word = dictL.parseWord(param.argm);
+    const language = parseWord.parseLang(param.argm[0]);
+    const word = parseWord.parseWord(param.argm);
     return dictL.getDefeninitionWord({
       word: word,
       language: language,

@@ -26,7 +26,8 @@ exports.initializeHelp = exports.initializeDictionary = exports.initializeQuiz =
 const Discord = __importStar(require("discord.js"));
 const transL = __importStar(require("./commandUtils/translate"));
 const quizL = __importStar(require("./commandUtils/quiz/quiz"));
-const dictL = __importStar(require("./commandUtils/dictionary"));
+const dictL = __importStar(require("./commandUtils/dictionary/dictionary"));
+const parseWord = __importStar(require("./commandUtils/dictionary/utils/parseString"));
 const randomcolor_1 = __importDefault(require("randomcolor"));
 // For Message Embed
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
@@ -153,8 +154,8 @@ function initializeDictionary(param) {
         else if (param.argm.length === 1) {
             return param.msg.reply("error: missing [language] or [word]");
         }
-        const language = dictL.parseLang(param.argm[0]);
-        const word = dictL.parseWord(param.argm);
+        const language = parseWord.parseLang(param.argm[0]);
+        const word = parseWord.parseWord(param.argm);
         return dictL.getDefeninitionWord({
             word: word,
             language: language,
