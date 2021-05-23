@@ -2,7 +2,8 @@ language: node_js
 node_js:
   - lts/*
 script:
-  - node dist/commandUtils/quiz.js
-  - node dist/commandUtils/translate.js
-  - node dist/commandUtils/dictionary.js
+  - node dist/commandUtils/quiz/quiz.js
+  - node dist/commandUtils/translate/translate.js
+  - node dist/commandUtils/dictionary/dictionary.js
+  - node dist/commandUtils/help/help.js
   - node dist/commands.js
