@@ -68,7 +68,9 @@ interface translateParams {
   msg: Discord.Message;
 }
 
-export async function translateText(p: translateParams): Promise<void> {
+export async function translateText(
+  p: translateParams
+): Promise<Discord.Message | undefined> {
   if (p.sentence === undefined) return;
   try {
     const trRes = await translate(p.sentence, {

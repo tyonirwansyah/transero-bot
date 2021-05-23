@@ -26,6 +26,7 @@ client.on("message", (msg: Discord.Message) => {
     cmd.initializeMultipleTranslate({ command: command, argm: argm, msg: msg });
     cmd.initializeQuiz({ command: command, argm: argm, msg: msg }, client);
     cmd.initializeDictionary({ command: command, argm: argm, msg: msg });
+    cmd.initializeHelp({command: command, argm: argm, msg: msg})
   }
 });
 

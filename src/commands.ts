@@ -15,8 +15,9 @@ interface funcParams {
 }
 
 // Translate Command
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function initializeTranslator(param: funcParams) {
+export function initializeTranslator(
+  param: funcParams
+): Promise<Discord.Message | undefined> | undefined {
   if (param.command === "tr") {
     if (param.argm.length <= 0) {
       return param.msg.reply("error: missing [language] [sentence]");
@@ -39,8 +40,9 @@ export function initializeTranslator(param: funcParams) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function initializeMultipleTranslate(param: funcParams) {
+export function initializeMultipleTranslate(
+  param: funcParams
+): Promise<Discord.Message | undefined> | undefined {
   if (param.command === "trm") {
     if (isNaN(parseInt(param.argm[0]))) {
       return param.msg.reply("error: [amountLanguages] Not a number");
@@ -145,20 +147,31 @@ function pickQuizEmbed(message: string) {
 
 // Dictionary Command
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function initializeDictionary(param: funcParams) {
-  if (param.command === "trd") {
+export function initializeDictionary(
+  param: funcParams
+): Promise<Discord.Message | undefined> | undefined {
+  if (param.command === "trdef") {
     if (param.argm.length === 0) {
       return param.msg.reply("error: missing [language] [word]");
     } else if (param.argm.length === 1) {
-      return param.msg.reply("error: missing [word]");
+      return param.msg.reply("error: missing [language] or [word]");
     }
     const language = dictL.parseLang(param.argm[0]);
     const word = dictL.parseWord(param.argm);
-    dictL.getDefeninitionWord({
+    return dictL.getDefeninitionWord({
       word: word,
       language: language,
       msg: param.msg,
     });
+  }
+}
+
+// Help Commands
+
+export function initializeHelp(
+  param: funcParams
+): Promise<Discord.Message | undefined> | undefined {
+  if (param.command === "trhelp") {
+    return param.msg.channel.send("This is help");
   }
 }
