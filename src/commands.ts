@@ -1,5 +1,11 @@
+import {
+  parseLanguage,
+  parseMultiLanguages,
+  parseSentence,
+} from "./translate/utils/parseString";
+import { allQuizGames } from "./translate/utils/PickAQuiz";
 import * as Discord from "discord.js";
-import * as transL from "./commandUtils/translate";
+import * as transL from "./translate/translate";
 import * as quizL from "./commandUtils/quiz/quiz";
 import * as dictL from "./commandUtils/dictionary/dictionary";
 import * as parseWord from "./commandUtils/dictionary/utils/parseString";
@@ -23,8 +29,8 @@ export function initializeTranslator(
     if (param.argm.length <= 0) {
       return param.msg.reply("error: missing [language] [sentence]");
     }
-    const sentence = transL.parseSentence(param.argm);
-    const language = transL.parseLanguage(param.argm[0].toLowerCase());
+    const sentence = parseSentence(param.argm);
+    const language = parseLanguage(param.argm[0].toLowerCase());
     if (sentence === "") {
       return param.msg.reply("error: [sentence] missing");
     }
@@ -53,8 +59,8 @@ export function initializeMultipleTranslate(
       return param.msg.reply("Why one language, use **$tr** instead");
     }
     const amountLanguages = parseInt(param.argm[0]);
-    const sentence = transL.parseSentence(param.argm, amountLanguages + 1);
-    const language = transL.parseMultiLanguages(param.argm, amountLanguages);
+    const sentence = parseSentence(param.argm, amountLanguages + 1);
+    const language = parseMultiLanguages(param.argm, amountLanguages);
     if (language.includes("")) {
       return param.msg.reply(
         "error: [Languages] one of the language doesn't exist or not supported"
@@ -85,24 +91,7 @@ export function initializeQuiz(
       .setAuthor("Transero the Quiz Whizz", avatar)
       .setTitle("Pick a Quiz:")
       .setDescription("Pick a quiz to start rolling.")
-      .addFields(
-        {
-          name: "Guess the country flag  📠",
-          value: "I'll show a flag and you will guess what country is it.",
-        },
-        {
-          name: "Guess the capital city  🗽",
-          value: "I'll show a country and you will guess the capital city.",
-        },
-        {
-          name: "Guess the country  👨‍🦯",
-          value: "I'll show a city and you will guess the country.",
-        },
-        {
-          name: "How to Play?",
-          value: "Start by reacting to the **emoji** you are going to play.",
-        }
-      );
+      .addFields(allQuizGames);
     param.msg.channel.send(pickQuiz).then((message) => {
       message.react("📠");
       message.react("🗽");

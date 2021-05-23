@@ -23,8 +23,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeHelp = exports.initializeDictionary = exports.initializeQuiz = exports.initializeMultipleTranslate = exports.initializeTranslator = void 0;
+const parseString_1 = require("./translate/utils/parseString");
+const PickAQuiz_1 = require("./translate/utils/PickAQuiz");
 const Discord = __importStar(require("discord.js"));
-const transL = __importStar(require("./commandUtils/translate"));
+const transL = __importStar(require("./translate/translate"));
 const quizL = __importStar(require("./commandUtils/quiz/quiz"));
 const dictL = __importStar(require("./commandUtils/dictionary/dictionary"));
 const parseWord = __importStar(require("./commandUtils/dictionary/utils/parseString"));
@@ -37,8 +39,8 @@ function initializeTranslator(param) {
         if (param.argm.length <= 0) {
             return param.msg.reply("error: missing [language] [sentence]");
         }
-        const sentence = transL.parseSentence(param.argm);
-        const language = transL.parseLanguage(param.argm[0].toLowerCase());
+        const sentence = parseString_1.parseSentence(param.argm);
+        const language = parseString_1.parseLanguage(param.argm[0].toLowerCase());
         if (sentence === "") {
             return param.msg.reply("error: [sentence] missing");
         }
@@ -65,8 +67,8 @@ function initializeMultipleTranslate(param) {
             return param.msg.reply("Why one language, use **$tr** instead");
         }
         const amountLanguages = parseInt(param.argm[0]);
-        const sentence = transL.parseSentence(param.argm, amountLanguages + 1);
-        const language = transL.parseMultiLanguages(param.argm, amountLanguages);
+        const sentence = parseString_1.parseSentence(param.argm, amountLanguages + 1);
+        const language = parseString_1.parseMultiLanguages(param.argm, amountLanguages);
         if (language.includes("")) {
             return param.msg.reply("error: [Languages] one of the language doesn't exist or not supported");
         }
@@ -92,19 +94,7 @@ function initializeQuiz(param, client) {
             .setAuthor("Transero the Quiz Whizz", avatar)
             .setTitle("Pick a Quiz:")
             .setDescription("Pick a quiz to start rolling.")
-            .addFields({
-            name: "Guess the country flag  📠",
-            value: "I'll show a flag and you will guess what country is it.",
-        }, {
-            name: "Guess the capital city  🗽",
-            value: "I'll show a country and you will guess the capital city.",
-        }, {
-            name: "Guess the country  👨‍🦯",
-            value: "I'll show a city and you will guess the country.",
-        }, {
-            name: "How to Play?",
-            value: "Start by reacting to the **emoji** you are going to play.",
-        });
+            .addFields(PickAQuiz_1.allQuizGames);
         param.msg.channel.send(pickQuiz).then((message) => {
             message.react("📠");
             message.react("🗽");
