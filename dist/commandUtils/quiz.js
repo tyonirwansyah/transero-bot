@@ -22,12 +22,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.countryCapitalQuiz = exports.capitalCityQuiz = exports.countryFlagQuiz = void 0;
+exports.flagToPng = exports.countryCapitalQuiz = exports.capitalCityQuiz = exports.countryFlagQuiz = exports.gameMode = exports.avatar = void 0;
 const Discord = __importStar(require("discord.js"));
 const country = __importStar(require("country-quiz"));
 const iso_3166_1_1 = __importDefault(require("iso-3166-1"));
+const quizQuestionParams_1 = require("./quizQuestionParams");
 // Message Embed Variables
-const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
+exports.avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
 // Quiz Selections
 let FlagtoCountry = country.newQuiz("flag-to-country", 1);
 let CountrytoCity = country.newQuiz("country-to-capital", 1);
@@ -37,12 +38,12 @@ var gameMode;
     gameMode[gameMode["FLAGTOCOUNTRY"] = 0] = "FLAGTOCOUNTRY";
     gameMode[gameMode["COUNTRYTOCITY"] = 1] = "COUNTRYTOCITY";
     gameMode[gameMode["CITYTOCOUNTRY"] = 2] = "CITYTOCOUNTRY";
-})(gameMode || (gameMode = {}));
+})(gameMode = exports.gameMode || (exports.gameMode = {}));
 // Flag to Country
 function countryFlagQuiz(p) {
     FlagtoCountry = country.newQuiz("flag-to-country");
     const quiz = FlagtoCountry;
-    quizQuestionEmbed({
+    quizQuestionParams_1.quizQuestionEmbed({
         quiz: quiz,
         quizQ: quiz.questions[0],
         typeQuiz: gameMode.FLAGTOCOUNTRY,
@@ -61,7 +62,7 @@ exports.countryFlagQuiz = countryFlagQuiz;
 function capitalCityQuiz(p) {
     CountrytoCity = country.newQuiz("country-to-capital");
     const quiz = CountrytoCity;
-    quizQuestionEmbed({
+    quizQuestionParams_1.quizQuestionEmbed({
         quiz: quiz,
         quizQ: quiz.questions[0],
         typeQuiz: gameMode.COUNTRYTOCITY,
@@ -80,7 +81,7 @@ exports.capitalCityQuiz = capitalCityQuiz;
 function countryCapitalQuiz(p) {
     CitytoCountry = country.newQuiz("capital-to-country");
     const quiz = CitytoCountry;
-    quizQuestionEmbed({
+    quizQuestionParams_1.quizQuestionEmbed({
         quiz: quiz,
         quizQ: quiz.questions[0],
         typeQuiz: gameMode.CITYTOCOUNTRY,
@@ -123,6 +124,7 @@ function flagToPng(url) {
     const newUrl = `https://flagcdn.com/w160/${isoCode === undefined ? "" : isoCode.alpha2.toLowerCase()}.png`;
     return newUrl;
 }
+exports.flagToPng = flagToPng;
 // Verify Answer
 function verifyAnswer(p) {
     if (p.answer === p.input) {
@@ -147,7 +149,7 @@ function answerEmbed(p) {
     if (p.isRight === true) {
         const embed = new Discord.MessageEmbed()
             .setColor("317B22")
-            .setAuthor("Transero the Quiz Whizz", avatar)
+            .setAuthor("Transero the Quiz Whizz", exports.avatar)
             .setDescription("You got the right answer.");
         return listenContinueAnswers({
             msg: p.msg,
@@ -159,7 +161,7 @@ function answerEmbed(p) {
     else {
         const embed = new Discord.MessageEmbed()
             .setColor("B33F62")
-            .setAuthor("Transero the Quiz Whizz", avatar)
+            .setAuthor("Transero the Quiz Whizz", exports.avatar)
             .setDescription("You got the wrong answer.")
             .setFooter(`The answer is ${"**" + p.answer + "**"}`);
         return listenContinueAnswers({
@@ -209,64 +211,6 @@ function continueQuiz(p) {
         case "🚫":
             break;
     }
-}
-function quizQuestionEmbed(p) {
-    const option = p.quizQ.options;
-    const url = flagToPng(p.imgUrl);
-    const optionsText = `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`;
-    // 0 == Flag Country Flag Quiz
-    if (p.typeQuiz === gameMode.FLAGTOCOUNTRY) {
-        return quizQuestionEmbedSend({
-            color: "1CCAD8",
-            question: "What Country is this flag from?",
-            options: optionsText,
-            msg: p.msg,
-            thumbnail: url,
-            newField: `[Click Here to See.](${p.imgUrl})`,
-        });
-    }
-    // 1 == Capital City Quiz
-    if (p.typeQuiz === gameMode.COUNTRYTOCITY) {
-        return quizQuestionEmbedSend({
-            color: "840032",
-            question: `What is the capital city of **${p.quizQ.question}**?`,
-            options: optionsText,
-            msg: p.msg,
-        });
-    }
-    // 2 == Country Quiz
-    if (p.typeQuiz === gameMode.CITYTOCOUNTRY) {
-        return quizQuestionEmbedSend({
-            color: "87F5FB",
-            question: `What country is **${p.quizQ.question}** in?`,
-            options: optionsText,
-            msg: p.msg,
-        });
-    }
-    else {
-        return console.error("[typeQuiz] only accept number from 0-2");
-    }
-}
-function quizQuestionEmbedSend(p) {
-    const embed = new Discord.MessageEmbed()
-        .setAuthor("Transero the Quiz Whizz", avatar)
-        .setTitle(`Question:`)
-        .setColor(p.color)
-        .setDescription(p.question)
-        .addField("Answers", p.options)
-        .setFooter("React to one of the icon below!");
-    if (p.thumbnail && p.newField) {
-        embed.addField("Cannot See Image?", p.newField).setThumbnail(p.thumbnail);
-    }
-    p.msg.channel
-        .send(embed)
-        .then((message) => {
-        message.react("1️⃣");
-        message.react("2️⃣");
-        message.react("3️⃣");
-        message.react("4️⃣");
-    })
-        .catch((e) => console.error(e));
 }
 function checkAnswers(p) {
     const { options, answer } = p.answerKey;

@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import * as transL from "./commandUtils/translate";
-import * as quizL from "./commandUtils/quiz";
+import * as quizL from "./commandUtils/quiz/quiz";
 import * as dictL from "./commandUtils/dictionary";
 import randomColor from "randomcolor";
 

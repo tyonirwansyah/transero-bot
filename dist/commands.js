@@ -25,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeHelp = exports.initializeDictionary = exports.initializeQuiz = exports.initializeMultipleTranslate = exports.initializeTranslator = void 0;
 const Discord = __importStar(require("discord.js"));
 const transL = __importStar(require("./commandUtils/translate"));
-const quizL = __importStar(require("./commandUtils/quiz"));
+const quizL = __importStar(require("./commandUtils/quiz/quiz"));
 const dictL = __importStar(require("./commandUtils/dictionary"));
 const randomcolor_1 = __importDefault(require("randomcolor"));
 // For Message Embed
