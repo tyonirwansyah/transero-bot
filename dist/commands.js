@@ -23,14 +23,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeHelp = exports.initializeDictionary = exports.initializeQuiz = exports.initializeMultipleTranslate = exports.initializeTranslator = void 0;
-const parseString_1 = require("./translate/utils/parseString");
-const PickAQuiz_1 = require("./translate/utils/PickAQuiz");
 const Discord = __importStar(require("discord.js"));
-const transL = __importStar(require("./translate/translate"));
 const quizL = __importStar(require("./commandUtils/quiz/quiz"));
 const dictL = __importStar(require("./commandUtils/dictionary/dictionary"));
 const parseWord = __importStar(require("./commandUtils/dictionary/utils/parseString"));
 const randomcolor_1 = __importDefault(require("randomcolor"));
+const translate_1 = require("./commandUtils/translate/translate");
+const parseString_1 = require("./commandUtils/translate/utils/parseString");
+const help_1 = require("./commandUtils/help/help");
+const PickAQuiz_1 = require("./commandUtils/translate/utils/PickAQuiz");
 // For Message Embed
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
 // Translate Command
@@ -47,7 +48,7 @@ function initializeTranslator(param) {
         if (language === "") {
             return param.msg.reply("error: [language] doesn't exist or not supported");
         }
-        transL.translateText({
+        translate_1.translateText({
             sentence: sentence,
             langS: language,
             msg: param.msg,
@@ -75,7 +76,7 @@ function initializeMultipleTranslate(param) {
         if (sentence === "") {
             return param.msg.reply("error: [sentence] missing sentence");
         }
-        transL.translateMultipleText({
+        translate_1.translateMultipleText({
             sentence: sentence,
             langM: language,
             msg: param.msg,
@@ -157,7 +158,7 @@ exports.initializeDictionary = initializeDictionary;
 // Help Commands
 function initializeHelp(param) {
     if (param.command === "trhelp") {
-        return param.msg.channel.send("This is help");
+        return param.msg.channel.send(help_1.commandsListEmbed);
     }
 }
 exports.initializeHelp = initializeHelp;

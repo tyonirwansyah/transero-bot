@@ -1,15 +1,19 @@
-import {
-  parseLanguage,
-  parseMultiLanguages,
-  parseSentence,
-} from "./translate/utils/parseString";
-import { allQuizGames } from "./translate/utils/PickAQuiz";
 import * as Discord from "discord.js";
-import * as transL from "./translate/translate";
 import * as quizL from "./commandUtils/quiz/quiz";
 import * as dictL from "./commandUtils/dictionary/dictionary";
 import * as parseWord from "./commandUtils/dictionary/utils/parseString";
 import randomColor from "randomcolor";
+import {
+  translateMultipleText,
+  translateText,
+} from "./commandUtils/translate/translate";
+import {
+  parseSentence,
+  parseLanguage,
+  parseMultiLanguages,
+} from "./commandUtils/translate/utils/parseString";
+import { commandsListEmbed } from "./commandUtils/help/help";
+import { allQuizGames } from "./commandUtils/translate/utils/PickAQuiz";
 
 // For Message Embed
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
@@ -39,7 +43,7 @@ export function initializeTranslator(
         "error: [language] doesn't exist or not supported"
       );
     }
-    transL.translateText({
+    translateText({
       sentence: sentence,
       langS: language,
       msg: param.msg,
@@ -69,7 +73,7 @@ export function initializeMultipleTranslate(
     if (sentence === "") {
       return param.msg.reply("error: [sentence] missing sentence");
     }
-    transL.translateMultipleText({
+    translateMultipleText({
       sentence: sentence,
       langM: language,
       msg: param.msg,
@@ -160,8 +164,8 @@ export function initializeDictionary(
 
 export function initializeHelp(
   param: funcParams
-): Promise<Discord.Message | undefined> | undefined {
+): Promise<Discord.Message> | undefined {
   if (param.command === "trhelp") {
-    return param.msg.channel.send("This is help");
+    return param.msg.channel.send(commandsListEmbed);
   }
 }
