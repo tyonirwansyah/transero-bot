@@ -1,9 +1,13 @@
 language: node_js
 node_js:
   - lts/*
+
+before_script:
+  - npm run build
+
 script:
-  - node dist/commandUtils/quiz/quiz.js
-  - node dist/commandUtils/translate/translate.js
   - node dist/commandUtils/dictionary/dictionary.js
   - node dist/commandUtils/help/help.js
+  - node dist/commandUtils/quiz/quiz.js
+  - node dist/commandUtils/translate/translate.js
   - node dist/commands.js
