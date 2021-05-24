@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { checkAnswersParams } from "../quizInterface";
 import { verifyAnswer } from "../quiz";
 
 export function checkAnswers(p: checkAnswersParams): void {
+  //@ts-ignore
   const { options, answer }: string[] = p.answerKey;
   switch (p.emoji) {
     case "1️⃣":

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as Discord from "discord.js";
 import { gameMode, avatar } from "../quiz";
 import { flagToPng } from "./flagToPng";
@@ -10,6 +11,7 @@ import {
 } from "./embedInterface";
 
 export function quizQuestionEmbed(p: quizQuestionParams): void | Promise<void> {
+  //@ts-ignore
   const option = p.quizQ.options;
   const url = flagToPng(p.imgUrl);
   const optionsText = `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`;
@@ -28,6 +30,7 @@ export function quizQuestionEmbed(p: quizQuestionParams): void | Promise<void> {
   if (p.typeQuiz === gameMode.COUNTRYTOCITY) {
     return quizQuestionEmbedSend({
       color: "840032",
+      //@ts-ignore
       question: `What is the capital city of **${p.quizQ.question}**?`,
       options: optionsText,
       msg: p.msg,
@@ -37,6 +40,7 @@ export function quizQuestionEmbed(p: quizQuestionParams): void | Promise<void> {
   if (p.typeQuiz === gameMode.CITYTOCOUNTRY) {
     return quizQuestionEmbedSend({
       color: "87F5FB",
+      //@ts-ignore
       question: `What country is **${p.quizQ.question}** in?`,
       options: optionsText,
       msg: p.msg,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   listenAnswersParams,
   verifyAnswerParams,
@@ -92,6 +93,7 @@ function listenAnswers(p: listenAnswersParams): void {
     const emojiName = reaction.emoji.name;
     const fetchMessage = p.msg?.channel?.lastMessage?.id;
     if (reaction.message.id === fetchMessage) {
+      //@ts-ignore
       const answerKey = p.quiz.questions[0];
       checkAnswers({
         msg: p.msg,
