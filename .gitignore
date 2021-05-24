@@ -79,4 +79,4 @@ typings/
 .next
 
 # typescript dist output
-/dist
+dist/

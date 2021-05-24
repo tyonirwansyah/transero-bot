@@ -101,6 +101,7 @@ function listenAnswers(p) {
         const emojiName = reaction.emoji.name;
         const fetchMessage = (_c = (_b = (_a = p.msg) === null || _a === void 0 ? void 0 : _a.channel) === null || _b === void 0 ? void 0 : _b.lastMessage) === null || _c === void 0 ? void 0 : _c.id;
         if (reaction.message.id === fetchMessage) {
+            //@ts-ignore
             const answerKey = p.quiz.questions[0];
             verifyAnswers_1.checkAnswers({
                 msg: p.msg,

@@ -20,11 +20,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.endEmbed = exports.answerEmbed = exports.quizQuestionEmbed = void 0;
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 const Discord = __importStar(require("discord.js"));
 const quiz_1 = require("../quiz");
 const flagToPng_1 = require("./flagToPng");
 const verifyContinue_1 = require("./verifyContinue");
 function quizQuestionEmbed(p) {
+    //@ts-ignore
     const option = p.quizQ.options;
     const url = flagToPng_1.flagToPng(p.imgUrl);
     const optionsText = `1) ${option[0]}\n 2) ${option[1]}\n 3) ${option[2]}\n 4) ${option[3]}\n`;
@@ -43,6 +45,7 @@ function quizQuestionEmbed(p) {
     if (p.typeQuiz === quiz_1.gameMode.COUNTRYTOCITY) {
         return quizQuestionEmbedSend({
             color: "840032",
+            //@ts-ignore
             question: `What is the capital city of **${p.quizQ.question}**?`,
             options: optionsText,
             msg: p.msg,
@@ -52,6 +55,7 @@ function quizQuestionEmbed(p) {
     if (p.typeQuiz === quiz_1.gameMode.CITYTOCOUNTRY) {
         return quizQuestionEmbedSend({
             color: "87F5FB",
+            //@ts-ignore
             question: `What country is **${p.quizQ.question}** in?`,
             options: optionsText,
             msg: p.msg,

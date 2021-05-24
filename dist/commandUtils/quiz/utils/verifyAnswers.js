@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAnswers = void 0;
 const quiz_1 = require("../quiz");
 function checkAnswers(p) {
+    //@ts-ignore
     const { options, answer } = p.answerKey;
     switch (p.emoji) {
         case "1️⃣":
