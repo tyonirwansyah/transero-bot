@@ -1,5 +1,11 @@
+import {
+  initializeTranslator,
+  initializeMultipleTranslate,
+  initializeQuiz,
+  initializeDictionary,
+  initializeHelp,
+} from "./cmd/commands";
 import * as Discord from "discord.js";
-import * as cmd from "./commands";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -22,11 +28,11 @@ client.on("message", (msg: Discord.Message) => {
       .trim()
       .split(/\s+/);
     // Commands
-    cmd.initializeTranslator({ command: command, argm: argm, msg: msg });
-    cmd.initializeMultipleTranslate({ command: command, argm: argm, msg: msg });
-    cmd.initializeQuiz({ command: command, argm: argm, msg: msg }, client);
-    cmd.initializeDictionary({ command: command, argm: argm, msg: msg });
-    cmd.initializeHelp({command: command, argm: argm, msg: msg})
+    initializeTranslator({ command: command, argm: argm, msg: msg });
+    initializeMultipleTranslate({ command: command, argm: argm, msg: msg });
+    initializeQuiz({ command: command, argm: argm, msg: msg }, client);
+    initializeDictionary({ command: command, argm: argm, msg: msg });
+    initializeHelp({ command: command, argm: argm, msg: msg });
   }
 });
 
