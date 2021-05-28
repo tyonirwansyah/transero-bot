@@ -14,23 +14,23 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^14.14.41",
+    "@types/node": "^15.6.1",
     "@types/randomcolor": "^0.5.5",
-    "@types/ws": "^7.4.1",
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
-    "checks-files-js": "^1.0.1",
-    "eslint": "^7.25.0",
+    "@types/ws": "^7.4.4",
+    "@typescript-eslint/eslint-plugin": "^4.25.0",
+    "@typescript-eslint/parser": "^4.25.0",
+    "checks-files-js": "^1.0.2",
+    "eslint": "^7.27.0",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.2"
   },
   "dependencies": {
     "@vitalets/google-translate-api": "^7.0.0",
     "axios": "^0.21.1",
     "country-quiz": "^0.5.1",
     "discord.js": "^12.5.3",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "iso-3166-1": "^2.0.1",
     "iso-639-1": "^2.1.9",
     "randomcolor": "^0.6.2"
