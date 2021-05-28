@@ -6,4 +6,4 @@ before_script:
   - npm run build
 
 script:
-  - npm run checkCmd
+  - npm run checkFiles
