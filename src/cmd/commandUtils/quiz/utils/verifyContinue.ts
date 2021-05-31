@@ -1,3 +1,5 @@
+import * as Discord from "discord.js";
+import { endEmbed } from "./embed";
 import {
   gameMode,
   countryFlagQuiz,
@@ -8,8 +10,6 @@ import {
   listenContinueAnswersParams,
   continueQuizParams,
 } from "../quizInterface";
-import * as Discord from "discord.js";
-import { endEmbed } from "./embed";
 
 export function listenContinueAnswers(
   p: listenContinueAnswersParams

@@ -1,10 +1,9 @@
 import * as Discord from "discord.js";
-import translate, { ITranslateResponse } from "@vitalets/google-translate-api";
 import ISO6391 from "iso-639-1";
 import randomColor from "randomcolor";
+import translate, { ITranslateResponse } from "@vitalets/google-translate-api";
 import { translateMultipleTextEmbed } from "./utils/embed";
-
-export const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
+import { avatar } from "../globals/global";
 
 interface translateParams {
   sentence: string | undefined;

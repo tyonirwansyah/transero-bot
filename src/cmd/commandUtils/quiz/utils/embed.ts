@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as Discord from "discord.js";
-import { gameMode, avatar } from "../quiz";
+import { gameMode } from "../quiz";
 import { flagToPng } from "./flagToPng";
 import { listenContinueAnswers } from "./verifyContinue";
+import { avatar } from "../../globals/global";
 import {
   quizQuestionParams,
   quizQuestionEmbedParams,

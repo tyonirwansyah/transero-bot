@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import * as Discord from "discord.js";
+import * as country from "country-quiz";
+import { quizQuestionEmbed, answerEmbed } from "./utils/embed";
+import { checkAnswers } from "./utils/verifyAnswers";
 import {
   listenAnswersParams,
   verifyAnswerParams,
   quizParams,
 } from "./quizInterface";
-import * as Discord from "discord.js";
-import * as country from "country-quiz";
-import { quizQuestionEmbed, answerEmbed } from "./utils/embed";
-import { checkAnswers } from "./utils/verifyAnswers";
-
-// Message Embed Variables
-export const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
 
 // Quiz Selections
 let FlagtoCountry = country.newQuiz("flag-to-country", 1);

@@ -1,8 +1,7 @@
 import axios from "axios";
 import * as Discord from "discord.js";
 import randomColor from "randomcolor";
-
-const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
+import { avatar } from "../globals/global";
 
 interface getDefininitionWordParams {
   word: string;

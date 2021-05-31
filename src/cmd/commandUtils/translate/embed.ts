@@ -1,8 +1,8 @@
 import * as Discord from "discord.js";
-import { ITranslateResponse } from "@vitalets/google-translate-api";
 import ISO6391 from "iso-639-1";
 import randomColor from "randomcolor";
-import { avatar } from "./translate";
+import { ITranslateResponse } from "@vitalets/google-translate-api";
+import { avatar } from "../globals/global";
 
 interface translateMultipleTextEmbedParams {
   translations: Array<ITranslateResponse>;
