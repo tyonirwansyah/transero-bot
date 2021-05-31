@@ -4,6 +4,7 @@ import {
   initializeQuiz,
   initializeDictionary,
   initializeHelp,
+  initializeStatus,
 } from "./cmd/commands";
 import * as Discord from "discord.js";
 import dotenv from "dotenv";
@@ -28,11 +29,13 @@ client.on("message", (msg: Discord.Message) => {
       .trim()
       .split(/\s+/);
     // Commands
-    initializeTranslator({ command: command, argm: argm, msg: msg });
-    initializeMultipleTranslate({ command: command, argm: argm, msg: msg });
-    initializeQuiz({ command: command, argm: argm, msg: msg }, client);
-    initializeDictionary({ command: command, argm: argm, msg: msg });
-    initializeHelp({ command: command, argm: argm, msg: msg });
+    const param = { command: command, argm: argm, msg: msg };
+    initializeTranslator(param);
+    initializeMultipleTranslate(param);
+    initializeQuiz(param, client);
+    initializeDictionary(param);
+    initializeHelp(param);
+    initializeStatus(param);
   }
 });
 
