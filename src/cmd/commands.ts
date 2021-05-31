@@ -3,6 +3,9 @@ import * as quizL from "./commandUtils/quiz/quiz";
 import * as dictL from "./commandUtils/dictionary/dictionary";
 import * as parseWord from "./commandUtils/dictionary/utils/parseString";
 import randomColor from "randomcolor";
+import { commandsListEmbed } from "./commandUtils/help/help";
+import { allQuizGames } from "./commandUtils/translate/utils/PickAQuiz";
+import { getBotStatus } from "./commandUtils/status/status";
 import {
   translateMultipleText,
   translateText,
@@ -12,8 +15,6 @@ import {
   parseLanguage,
   parseMultiLanguages,
 } from "./commandUtils/translate/utils/parseString";
-import { commandsListEmbed } from "./commandUtils/help/help";
-import { allQuizGames } from "./commandUtils/translate/utils/PickAQuiz";
 
 // For Message Embed
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
@@ -167,5 +168,15 @@ export function initializeHelp(
 ): Promise<Discord.Message> | undefined {
   if (param.command === "trhelp") {
     return param.msg.channel.send(commandsListEmbed);
+  }
+}
+
+// Bot Status Commands
+
+export function initializeStatus(
+  param: funcParams
+): Promise<Discord.Message | undefined> | undefined {
+  if (param.command === "trstats") {
+    return getBotStatus(param.msg);
   }
 }
