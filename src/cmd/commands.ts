@@ -15,12 +15,13 @@ import {
   parseLanguage,
   parseMultiLanguages,
 } from "./commandUtils/translate/utils/parseString";
+import { getContribute } from "./commandUtils/contribute/contribute";
 
 // For Message Embed
 const avatar = `https://i.pinimg.com/originals/c1/09/cf/c109cf64b7b0f7bcdf5b46d4069f4ee3.jpg`;
 
 // Param Interface
-interface funcParams {
+export interface funcParams {
   command: string;
   argm: string[];
   msg: Discord.Message;
@@ -179,5 +180,13 @@ export function initializeStatus(
 ): Promise<Discord.Message | undefined> | undefined {
   if (param.command === "trstats") {
     return getBotStatus(param.msg, client);
+  }
+}
+
+export function initializeContribution(
+  param: funcParams
+): Promise<Discord.Message | undefined> | undefined {
+  if (param.command === "trcontr") {
+    return getContribute(param.msg);
   }
 }
