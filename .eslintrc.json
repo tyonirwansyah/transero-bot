@@ -10,5 +10,5 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
-  "rules": {}
+  "rules": { "no-non-null-assertion": false }
 }
