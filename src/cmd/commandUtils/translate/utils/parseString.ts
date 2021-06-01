@@ -39,20 +39,26 @@ export function parseLanguage(lang: string): string {
 export function parseMultiLanguages(
   lang: string[],
   amountLang: number
-): string[] {
-  let langs: string[] = [];
-  for (let i = 1; i < amountLang + 1; i++) {
-    langs.push(lang?.[i] as string);
-  }
-  langs.forEach((lang, val) => {
-    const languageConvert = ISO6391.getName(lang).toLowerCase();
-    if (lang.length == 2 && languages.has(languageConvert)) {
-      return (langs[val] = languages.get(languageConvert));
-    } else if (languages.has(lang)) {
-      return (langs[val] = languages.get(lang));
-    } else {
-      return (langs = [""]);
+): string[] | null {
+  let langs: string[] | null = [];
+  if (lang.length === amountLang) return (langs = ["missingLang"]);
+  if (langs) {
+    for (let i = 1; i < amountLang + 1; i++) {
+      langs.push(lang?.[i] as string);
     }
-  });
+    if (langs.some((l) => l === undefined)) return (langs = ["missingLang"]);
+    if (langs) {
+      langs.forEach((lang, val) => {
+        const languageConvert = ISO6391.getName(lang).toLowerCase();
+        if (lang.length === 2 && languages.has(languageConvert)) {
+          return (langs![val] = languages.get(languageConvert));
+        } else if (languages.has(lang)) {
+          return (langs![val] = languages.get(lang));
+        } else {
+          return (langs![val] = "");
+        }
+      });
+    }
+  }
   return langs;
 }

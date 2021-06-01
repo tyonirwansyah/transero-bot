@@ -8,7 +8,7 @@ import { avatar } from "../globals/global";
 interface translateParams {
   sentence: string | undefined;
   langS?: string;
-  langM?: string[];
+  langM?: string[] | null;
   msg: Discord.Message;
 }
 

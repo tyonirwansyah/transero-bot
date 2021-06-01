@@ -62,14 +62,19 @@ export function initializeMultipleTranslate(
     } else if (parseInt(param.argm[0]) > 3) {
       return param.msg.reply("error: [amountLanguages] Maximum 3 languages");
     } else if (parseInt(param.argm[0]) === 1) {
-      return param.msg.reply("Why one language, use **$tr** instead");
+      return param.msg.reply("error: have to be either 2 or 3 languages");
+    } else if (param.argm.length === 1) {
+      return param.msg.reply("error: missing [languages] [sentence]");
     }
     const amountLanguages = parseInt(param.argm[0]);
     const sentence = parseSentence(param.argm, amountLanguages + 1);
     const language = parseMultiLanguages(param.argm, amountLanguages);
-    if (language.includes("")) {
+    if (language!.some((l) => l === "missingLang")) {
+      return param.msg.reply("error: [languages] is missing ");
+    }
+    if (language!.some((l) => l === "")) {
       return param.msg.reply(
-        "error: [Languages] one of the language doesn't exist or not supported"
+        "error: [languages] one of the language doesn't exist or not supported"
       );
     }
     if (sentence === "") {
