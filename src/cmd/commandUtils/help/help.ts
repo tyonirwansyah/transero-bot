@@ -2,10 +2,10 @@ import * as Discord from "discord.js";
 import randomColor from "randomcolor";
 
 const command = [
-  "**$tr** : translate one language",
-  "**$trm** : translate 2-3 language",
+  "**$tr** : translate one language → $tr [language] [sentence]",
+  "**$trm** : translate 2-3 language → $trm [languageAmount] [languages] [sentence]",
+  "**$trdef** : finds a definition of a word → $trdef [language] [sentence]",
   "**$trquiz** : creates a quiz game (3 categories)",
-  "**$trdef** : finds a definition of a word",
   "**$trstats** : show bot status",
   "**$trcontr** : contribute to transero",
 ];
