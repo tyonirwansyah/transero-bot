@@ -35,7 +35,7 @@ client.on("message", (msg: Discord.Message) => {
     initializeQuiz(param, client);
     initializeDictionary(param);
     initializeHelp(param);
-    initializeStatus(param);
+    initializeStatus(param, client);
   }
 });
 

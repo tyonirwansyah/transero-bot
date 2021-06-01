@@ -174,9 +174,10 @@ export function initializeHelp(
 // Bot Status Commands
 
 export function initializeStatus(
-  param: funcParams
+  param: funcParams,
+  client: Discord.Client
 ): Promise<Discord.Message | undefined> | undefined {
   if (param.command === "trstats") {
-    return getBotStatus(param.msg);
+    return getBotStatus(param.msg, client);
   }
 }
