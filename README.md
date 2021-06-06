@@ -53,6 +53,8 @@ Transero is a discord bot categorized for translating languages and other langua
 
 [Supported Languages for Defining](https://github.com/itstyonirwansyah/transero-bot/blob/master/.github/SUPPORTED_LANGUAGES_DEFINITION.md)
 
+**Warning**: Some Languages from the top might be malfunctioning, please issue in the [issue section](https://github.com/itstyonirwansyah/transero-bot/issues).
+
 # Contribution
 
 Transero is open to contributions, but we recommend creating an issue or replying in a comment to let us know what you are working on first that way we don't overwrite each other or have many people adding the same feature/solving the same issue.
