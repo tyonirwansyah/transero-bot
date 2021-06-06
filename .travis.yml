@@ -1,12 +1,10 @@
 language: node_js
 
 node_js:
-  - "14"
+  - "14.16.0"
 
 cache:
   npm: false
-
-before_install: npm i -g npm@7.10.0
 
 before_script:
   - npm run build
@@ -17,3 +15,6 @@ script:
   branches:
     only:
       - master
+
+deploy:
+  provider: heroku
