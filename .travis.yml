@@ -12,9 +12,9 @@ before_script:
 script:
   - npm run checkFiles
 
-  branches:
-    only:
-      - master
+branches:
+  only:
+    - master
 
 deploy:
   provider: heroku
