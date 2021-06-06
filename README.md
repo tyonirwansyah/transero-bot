@@ -25,6 +25,9 @@
     <a href="https://app.codacy.com/gh/itstyonirwansyah/transero-bot/dashboard?branch=master">
         <img src="https://img.shields.io/codacy/grade/0f9a3ddf618149cdb478a15b364021d2?style=for-the-badge&color=45cbb2" height="25" alt="code-quality-codacy" title="code-quality-codacy">
     </a>
+    <a href="https://discord.com/api/oauth2/authorize?client_id=835871295148785734&permissions=190464&scope=bot">
+        <img src="https://img.shields.io/static/v1?label=INVITE&message=BOT&style=for-the-badge&color=45cbb2" height="25" alt="code-quality-codacy" title="code-quality-codacy">
+    </a>
 </p>
 
 ---
@@ -32,6 +35,23 @@
 # About
 
 Transero is a discord bot categorized for translating languages and other language topics.
+
+# Bot Commands
+
+| Commands     | Description                                | Usage                                           |
+| ------------ | ------------------------------------------ | ----------------------------------------------- |
+| **$tr**      | Translate language to another language     | $tr [language] [sentence]                       |
+| **$trm**     | Translate a language to multiple languages | $trm [amountOfLanguages] [languages] [sentence] |
+| **$trdef**   | A Definition / Dictionary                  | $trm [language] [word]                          |
+| **$trquiz**  | Runs a mini trivia quiz                    | $trquiz                                         |
+| **$trstats** | Display the status of the bot and project  | $trstats                                        |
+| **$trcontr** | Contribute to this Project                 | $trcontr                                        |
+
+---
+
+[Supported Languages for Translating](https://github.com/itstyonirwansyah/transero-bot/blob/master/.github/SUPPORTED_LANGUAGES_TRANSLATE.md)
+
+[Supported Languages for Defining](https://github.com/itstyonirwansyah/transero-bot/blob/master/.github/SUPPORTED_LANGUAGES_DEFINITION.md)
 
 # Contribution
 
@@ -43,13 +63,13 @@ Check our [Contributions](https://github.com/itstyonirwansyah/transero-bot/blob/
 
 # Status
 
-| Plans                       | Description                           | Status               |
-| --------------------------- | ------------------------------------- | -------------------- |
-| **Early Development**       | Structuring the barebones of the app  | Completed ✅         |
-| **Typescript**              | Convert Codebase to TS                | Completed ✅         |
-| **Features**                | Finished creating the whole feature   | Currently Working 🏗️ |
-| **Linting and Refactoring** | Linting and Refactoring the Code Base | Not Progressed ⛔    |
-| **Deployment**              | Deploy / Host the Bot                 | Not Progressed ⛔    |
+| Plans                       | Description                           | Status       |
+| --------------------------- | ------------------------------------- | ------------ |
+| **Early Development**       | Structuring the barebones of the app  | Completed ✅ |
+| **Typescript**              | Convert Codebase to TS                | Completed ✅ |
+| **Features**                | Finished creating the whole feature   | Completed ✅ |
+| **Linting and Refactoring** | Linting and Refactoring the Code Base | Completed ✅ |
+| **Deployment**              | Deploy / Host the Bot                 | Completed ✅ |
 
 # Code of Conduct
 
