@@ -15,6 +15,3 @@ script:
 branches:
   only:
     - master
-
-deploy:
-  provider: heroku
