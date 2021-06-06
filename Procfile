@@ -1,1 +1,1 @@
-Worker: node dist/index.js
+worker: npm run start

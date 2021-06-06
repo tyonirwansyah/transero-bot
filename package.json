@@ -1,28 +1,35 @@
 {
   "name": "transero",
   "version": "1.0.0",
-  "description": "",
+  "description": "a discord translating bot",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w",
+    "postinstall": "npm run build",
+    "watch": "tsc --watch",
     "start": "node dist/index.js",
     "dev": "nodemon dist/index.js",
     "checkFiles": "npx checks-files-js ./dist/ --ignore index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "discord.js",
+    "bot",
+    "translate",
+    "language",
+    "dictionary"
+  ],
+  "author": "Tyo Nirwansyah",
+  "license": "MIT",
   "devDependencies": {
-    "@types/node": "^15.6.1",
+    "@types/node": "^15.12.1",
     "@types/randomcolor": "^0.5.5",
     "@types/ws": "^7.4.4",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
     "checks-files-js": "^1.0.2",
-    "eslint": "^7.27.0",
+    "eslint": "^7.28.0",
     "nodemon": "^2.0.7",
-    "prettier": "^2.3.0",
+    "prettier": "^2.3.1",
     "typescript": "^4.3.2"
   },
   "dependencies": {
@@ -34,5 +41,8 @@
     "iso-3166-1": "^2.0.1",
     "iso-639-1": "^2.1.9",
     "randomcolor": "^0.6.2"
+  },
+  "engines": {
+    "node": "14.16.0"
   }
 }
