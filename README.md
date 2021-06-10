@@ -73,6 +73,8 @@ Check our [Contributions](https://github.com/itstyonirwansyah/transero-bot/blob/
 | **Linting and Refactoring** | Linting and Refactoring the Code Base | Completed ✅ |
 | **Deployment**              | Deploy / Host the Bot                 | Completed ✅ |
 
+**Transero is currently on V1.**
+
 # Code of Conduct
 
 Please read [Code of Conduct](https://github.com/itstyonirwansyah/transero-bot/blob/master/.github/CODE_OF_CONDUCT.md) for details on our code of conduct.
